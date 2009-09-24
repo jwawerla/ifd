@@ -110,7 +110,7 @@ CPathPlannerLookup::~CPathPlannerLookup()
     delete[] mLookupTable[i];
 }
 //-----------------------------------------------------------------------------
-int CPathPlannerLookup::findClosesWaypoint( CPose2d pose )
+int CPathPlannerLookup::findClosesWaypoint( const CPose2d pose )
 {
   int idx = -1;
   CPose2d wpPose;
@@ -126,11 +126,14 @@ int CPathPlannerLookup::findClosesWaypoint( CPose2d pose )
     }
   }
 
+  if (idx == -1) {
+    PRT_ERR1("No waypoint found for %s", pose.toStr().c_str());
+  }
   return idx;
 }
 //-----------------------------------------------------------------------------
-void CPathPlannerLookup::getPath( CPose2d start, CPose2d end,
-                                  std::list<CWaypoint2d> &wpList )
+void CPathPlannerLookup::getPathFromTo( const CPose2d start, const CPose2d end,
+                                        std::list<CWaypoint2d> &wpList )
 {
   unsigned int count = 0;
   std::list<CWaypoint2d>::iterator it;

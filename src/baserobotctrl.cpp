@@ -75,10 +75,8 @@ ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
   // Add nearest distance obstacle avoidance to robot
   stgModel = mDrivetrain->getStageModel();
   assert( stgModel );
-  mNd = new CStageNd( stgModel, 0.4, 0.3, 0.2, mRobot->getName() );
-  mNd->addRangeFinder( mLaser );
-
-  mPathPlanner->getPath( mRobotPose, CPose2d( 17, 17, 0 ), mWaypointList );
+  //mNd = new CStageNd( stgModel, 0.4, 0.3, 0.2, mRobot->getName() );
+  //mNd->addRangeFinder( mLaser );
 }
 //-----------------------------------------------------------------------------
 ABaseRobotCtrl::~ABaseRobotCtrl()
@@ -100,7 +98,7 @@ void ABaseRobotCtrl::transferWaypointToStage()
   stgWp.pose.x = pose.mX;
   stgWp.pose.y = pose.mY;
   stgWp.pose.a = pose.mYaw;
-  stgWp.color = Stg::Color( 0, 1, 0 ); // green
+  stgWp.color = Stg::Color( 0, 1, 0 );  // green
   mDrivetrain->getStageModel()->waypoints.push_back( stgWp );
 
   for ( it = mWaypointList.begin(); it != mWaypointList.end(); it++ ) {
@@ -174,7 +172,6 @@ bool ABaseRobotCtrl::obstacleAvoid()
   return false; // didn't have to avoid anything
 }
 //-----------------------------------------------------------------------------
-
 tActionResult ABaseRobotCtrl::actionFollowWaypointList()
 {
   float angle;
@@ -182,6 +179,14 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
   float rightDist;
   float rightFrontDist;
   bool rightWallFollow = false;
+
+  if ( mFgStateChanged ) {
+    if ( mWaypointList.size() == 0 ) {
+      PRT_ERR0( "Waypoint list empty" );
+      return COMPLETED;
+    }
+    mCurrentWaypoint = mWaypointList.front();
+  }
 
   if ( mRobotPose.distance( mCurrentWaypoint.getPose() ) < 1.0 ) {
     if ( mWaypointList.size() == 0 )
@@ -192,8 +197,6 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
   }
 
   if ( not obstacleAvoid() ) {
-
-
     rightDist = mLaser->mRangeData[0].range;
     leftDist = mLaser->mRangeData[mLaser->getNumSamples()-1].range;
     rightFrontDist = mLaser->mRangeData[mLaser->getNumSamples() / 4].range;
@@ -209,7 +212,6 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
       //rprintf("rightWallFollow %f\n", R2D(angle));
       //}
     }
-
 
     if ( not rightWallFollow ) {
       angle = atan2( mCurrentWaypoint.getPose().mY - mRobotPose.mY,
@@ -235,8 +237,9 @@ tActionResult ABaseRobotCtrl::actionSelectPatch()
 {
   int r;
 
-  r = randNo( 0, mPatchList.size() - 1 );
+  r = ( int ) randNo( 0, mPatchList.size() - 1 );
   mCurrentPatch = &mPatchList[r];
+  //rprintf("assigning patch %d %s\n", r, mCurrentPatch->getPose().toStr().c_str());
   assert( mCurrentPatch );
 
   return COMPLETED;
@@ -319,16 +322,18 @@ void ABaseRobotCtrl::updateData( float dt )
   mElapsedStateTime += dt;
   mStatusStr =  mFsmText[mState];
 
+rprintf("time %f \n", mTextDisplay->getTimeStamp());
+rprintf("robot %s %s\n", mRobotPose.toStr().c_str(), mDrivetrain->getVelocityCmd().toStr().c_str());
   switch ( mState ) {
     case START:
       actionSelectPatch();
       mState = SW_PATCH;
-      rprintf("state %d \n", mState);
       break;
 
     case SW_PATCH:
       if ( mFgStateChanged ) {
-        mPathPlanner->getPath( mRobotPose, mCurrentPatch->getPose(), mWaypointList );
+        rprintf("path %s %s \n", mRobotPose.toStr().c_str(), mCurrentPatch->getPose().toStr().c_str());
+        mPathPlanner->getPathFromTo( mRobotPose, mCurrentPatch->getPose(), mWaypointList );
       }
 
       if ( actionFollowWaypointList() == COMPLETED ) {

@@ -45,13 +45,13 @@ define autorob pioneer2dx
 (
  sicklaser( samples 32 range_max 5 laser_return 2 watts 30 )
  ctrl "ifd"
- joules -1
+ joules 1000000
  joules_capacity 400000
  fiducial_return 0
 )
 
 autorob( pose [13.637 -15.052 0 -95.589]   name "R01" )
-autorob( pose [-3.843 -22.329 0 -76.232]   name "R02" )
+autorob( pose [-3.843 -22.329 0  76.232]   name "R02" )
 autorob( pose [14.091 -0.663 0 -20.801]    name "R03" )
 autorob( pose [-0.383 19.205 0 149.618]    name "R04" )
 autorob( pose [11.515 10.720 0 61.411]     name "R05" )

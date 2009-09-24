@@ -34,7 +34,8 @@ using namespace Rapi;
  * of the coordinate system is placed in the center of the bitmap.
  * @author Jens Wawerla <jwawerla@sfu.ca>
  */
-class CPathPlannerLookup{
+class CPathPlannerLookup
+{
   public:
     /**
      * Default constructor
@@ -45,13 +46,13 @@ class CPathPlannerLookup{
      * @param offsetX X direction offset of the origin [pixel]
      * @param offsetY Y direction offset of the origin [pixel]
      */
-    CPathPlannerLookup(std::string pointsFile,
-                       std::string tableFile,
-                       float pixelPerMeterX,
-                       float pixelPerMeterY,
-                       float offsetX,
-                       float offsetY
-    );
+    CPathPlannerLookup( std::string pointsFile,
+                        std::string tableFile,
+                        float pixelPerMeterX,
+                        float pixelPerMeterY,
+                        float offsetX,
+                        float offsetY
+                      );
     /** Default destructor */
     ~CPathPlannerLookup();
     /**
@@ -60,7 +61,8 @@ class CPathPlannerLookup{
      * @param end position
      * @param wpList list of way points
      */
-   void getPath(CPose2d start, CPose2d end, std::list<CWaypoint2d> &wpList);
+    void getPathFromTo( const CPose2d start, const CPose2d end,
+                        std::list<CWaypoint2d> &wpList );
 
 
   protected:
@@ -70,7 +72,7 @@ class CPathPlannerLookup{
      * @param pose to find waypoint for
      * @return index of waypoint
      */
-    int findClosesWaypoint(CPose2d pose);
+    int findClosesWaypoint( const CPose2d pose );
 
   private:
     /** Maximal number of waypoints in a planned path */
