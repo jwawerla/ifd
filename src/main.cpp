@@ -55,8 +55,8 @@ extern "C" int Init ( Stg::Model* mod )
   robotCtrl->addPatch ( CPatch ( CPose2d ( 17, 17,0 ) ) );
   robotCtrl->addPatch ( CPatch ( CPose2d ( 26,  0,0 ) ) );
   robotCtrl->addPatch ( CPatch ( CPose2d ( 17, -26,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 0, -26,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( -17, -17,0 ) ) );
+  //robotCtrl->addPatch ( CPatch ( CPose2d ( 0, -26,0 ) ) );
+  //robotCtrl->addPatch ( CPatch ( CPose2d ( -17, -17,0 ) ) );
   robotCtrl->addPatch ( CPatch ( CPose2d ( -26,  0,0 ) ) );
   robotCtrl->addPatch ( CPatch ( CPose2d ( 17, -17,0 ) ) );
 

@@ -41,6 +41,7 @@ ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
   mAvoidCount = 0;
   mReplanCounter = 0;
   mCounter = 0;
+  mPatchList.clear();
 
   //************************************
   // FSM
@@ -178,7 +179,7 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
   float leftDist;
   float rightDist;
   float rightFrontDist;
-  bool rightWallFollow = false;
+  bool fgRightWallFollow = false;
 
   if ( mFgStateChanged ) {
     if ( mWaypointList.size() == 0 ) {
@@ -204,16 +205,14 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
 
     // check if we are in a corridor
     if ( leftDist + rightDist < 2.5 ) {
-      //if ( rightDist > 0.7 ) {
       angle = D2R( -10.0 * ( rightFrontDist - 0.8 ) );
       mDrivetrain->setRotationalVelocityCmd( angle );
       mDrivetrain->setTranslationalVelocityCmd( fabs( CRUISE_SPEED * cos( angle ) ) );
-      rightWallFollow = true;
-      //rprintf("rightWallFollow %f\n", R2D(angle));
-      //}
+      fgRightWallFollow = true;
+      rprintf("rightWallFollow %f\n", R2D(angle));
     }
 
-    if ( not rightWallFollow ) {
+    if ( not fgRightWallFollow ) {
       angle = atan2( mCurrentWaypoint.getPose().mY - mRobotPose.mY,
                      mCurrentWaypoint.getPose().mX - mRobotPose.mX );
       angle = normalizeAngle( angle - mRobotPose.mYaw );
@@ -236,8 +235,9 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
 tActionResult ABaseRobotCtrl::actionSelectPatch()
 {
   int r;
-
-  r = ( int ) randNo( 0, mPatchList.size() - 1 );
+  do {
+    r = ( int ) randNo( 0, mPatchList.size() - 1 );
+  } while ( (r < 0) || r >= mPatchList.size() );
   mCurrentPatch = &mPatchList[r];
   //rprintf("assigning patch %d %s\n", r, mCurrentPatch->getPose().toStr().c_str());
   assert( mCurrentPatch );
@@ -322,8 +322,7 @@ void ABaseRobotCtrl::updateData( float dt )
   mElapsedStateTime += dt;
   mStatusStr =  mFsmText[mState];
 
-rprintf("time %f \n", mTextDisplay->getTimeStamp());
-rprintf("robot %s %s\n", mRobotPose.toStr().c_str(), mDrivetrain->getVelocityCmd().toStr().c_str());
+  //rprintf("robot %s %s\n", mRobotPose.toStr().c_str(), mDrivetrain->getVelocityCmd().toStr().c_str());
   switch ( mState ) {
     case START:
       actionSelectPatch();
@@ -342,7 +341,7 @@ rprintf("robot %s %s\n", mRobotPose.toStr().c_str(), mDrivetrain->getVelocityCmd
       break;
 
     case FORAGE:
-      //mState = START;
+      mState = START;
       break;
 
     default:
@@ -355,13 +354,16 @@ rprintf("robot %s %s\n", mRobotPose.toStr().c_str(), mDrivetrain->getVelocityCmd
   transferWaypointToStage();
 
   // set text display
-  mTextDisplay->setText( mStatusStr.c_str() );
+  mTextDisplay->setText(  mCurrentPatch->getPose().toStr().c_str() ); //mStatusStr.c_str() );
 
   // Handle FSM status stuff
   if ( mState != mPrevState ) {
     mPrevState = mState;
     mFgStateChanged = true;
     mElapsedStateTime = 0.0;
+  }
+  else {
+    mFgStateChanged = false;
   }
 }
 //-----------------------------------------------------------------------------

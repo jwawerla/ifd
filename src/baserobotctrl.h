@@ -24,7 +24,7 @@
 #include "RapiLooseStage"
 #include "pathplannerlookup.h"
 #include "patch.h"
-#include "stagend.h"
+//#include "stagend.h"
 #include <list>
 #include <vector>
 
@@ -78,7 +78,7 @@ class ABaseRobotCtrl : public ARobotCtrl
     /** Previous state */
     tState mPrevState;
     /** Nearness distance obstacle avoidance */
-    CStageNd* mNd;
+    //CStageNd* mNd;
     /** Current waypoint */
     CWaypoint2d mCurrentWaypoint;
     /** Path planner */

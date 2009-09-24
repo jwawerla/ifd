@@ -7,26 +7,6 @@ src/CMakeFiles/ifd.dir/baserobotctrl.cpp.o
  /home/jwawerla/projects/ifd/src/baserobotctrl.h
  /home/jwawerla/projects/ifd/src/patch.h
  /home/jwawerla/projects/ifd/src/pathplannerlookup.h
- /usr/include/fltk-1.1/FL/Enumerations.H
- /usr/include/fltk-1.1/FL/Fl.H
- /usr/include/fltk-1.1/FL/Fl_Box.H
- /usr/include/fltk-1.1/FL/Fl_Export.H
- /usr/include/fltk-1.1/FL/Fl_Gl_Window.H
- /usr/include/fltk-1.1/FL/Fl_Group.H
- /usr/include/fltk-1.1/FL/Fl_Image.H
- /usr/include/fltk-1.1/FL/Fl_Menu_.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Bar.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Item.H
- /usr/include/fltk-1.1/FL/Fl_Widget.H
- /usr/include/fltk-1.1/FL/Fl_Window.H
- /usr/include/fltk-1.1/FL/fl_draw.H
- /usr/include/fltk-1.1/FL/gl.h
- local/include/autolab-nd-0.1/geometria.h
- local/include/autolab-nd-0.1/nd.h
- local/include/autolab-nd-0.1/nd2_alg.h
- local/include/autolab-nd-0.1/nd_alg.h
- local/include/autolab-nd-0.1/ndvis.h
- local/include/autolab-nd-0.1/stagend.h
  local/include/autolab-rapi-0.1/RapiCore
  local/include/autolab-rapi-0.1/analogsensorarray.h
  local/include/autolab-rapi-0.1/binarysensorarray.h
@@ -86,26 +66,6 @@ src/CMakeFiles/ifd.dir/main.cpp.o
  /home/jwawerla/projects/ifd/src/main.cpp
  /home/jwawerla/projects/ifd/src/patch.h
  /home/jwawerla/projects/ifd/src/pathplannerlookup.h
- /usr/include/fltk-1.1/FL/Enumerations.H
- /usr/include/fltk-1.1/FL/Fl.H
- /usr/include/fltk-1.1/FL/Fl_Box.H
- /usr/include/fltk-1.1/FL/Fl_Export.H
- /usr/include/fltk-1.1/FL/Fl_Gl_Window.H
- /usr/include/fltk-1.1/FL/Fl_Group.H
- /usr/include/fltk-1.1/FL/Fl_Image.H
- /usr/include/fltk-1.1/FL/Fl_Menu_.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Bar.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Item.H
- /usr/include/fltk-1.1/FL/Fl_Widget.H
- /usr/include/fltk-1.1/FL/Fl_Window.H
- /usr/include/fltk-1.1/FL/fl_draw.H
- /usr/include/fltk-1.1/FL/gl.h
- local/include/autolab-nd-0.1/geometria.h
- local/include/autolab-nd-0.1/nd.h
- local/include/autolab-nd-0.1/nd2_alg.h
- local/include/autolab-nd-0.1/nd_alg.h
- local/include/autolab-nd-0.1/ndvis.h
- local/include/autolab-nd-0.1/stagend.h
  local/include/autolab-rapi-0.1/RapiCore
  local/include/autolab-rapi-0.1/analogsensorarray.h
  local/include/autolab-rapi-0.1/binarysensorarray.h

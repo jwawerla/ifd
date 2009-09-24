@@ -51,14 +51,14 @@ extern "C" int Init ( Stg::Model* mod )
   robot = new Rapi::CLooseStageRobot ( mod );
   robotCtrl = new ABaseRobotCtrl ( robot );
 
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 0, 17,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 12, 12,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 17,  0,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 12, -12,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 0, -17,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( -12, -12,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( -17,  0,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 12, -12,0 ) ) );
+  robotCtrl->addPatch ( CPatch ( CPose2d ( 0, 26,0 ) ) );
+  robotCtrl->addPatch ( CPatch ( CPose2d ( 17, 17,0 ) ) );
+  robotCtrl->addPatch ( CPatch ( CPose2d ( 26,  0,0 ) ) );
+  robotCtrl->addPatch ( CPatch ( CPose2d ( 17, -26,0 ) ) );
+  robotCtrl->addPatch ( CPatch ( CPose2d ( 0, -26,0 ) ) );
+  robotCtrl->addPatch ( CPatch ( CPose2d ( -17, -17,0 ) ) );
+  robotCtrl->addPatch ( CPatch ( CPose2d ( -26,  0,0 ) ) );
+  robotCtrl->addPatch ( CPatch ( CPose2d ( 17, -17,0 ) ) );
 
   return 0; // ok
 

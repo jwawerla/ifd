@@ -73,6 +73,19 @@ class CPathPlannerLookup
      * @return index of waypoint
      */
     int findClosesWaypoint( const CPose2d pose );
+    /**
+     * Checks if a index is with the bounds of the lookup table
+     * @param idx to check
+     * @return true if in bounds, false other wise
+     */
+    inline bool inBounds(int idx) {
+       if (idx < 0)
+         return false;
+       if (idx >= (int)mNumPoints)
+         return false;
+       return true;
+    };
+
 
   private:
     /** Maximal number of waypoints in a planned path */

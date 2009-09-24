@@ -43,13 +43,13 @@ CPathPlannerLookup::CPathPlannerLookup( std::string pointsFile,
   mFpTable = fopen( tableFile.c_str(), "r" );
   if ( mFpTable == NULL ) {
     PRT_ERR1( "Failed to open lookup table file %s", tableFile.c_str() );
-    exit(-1);
+    exit( -1 );
   }
 
   mFpPoints = fopen( pointsFile.c_str(), "r" );
   if ( mFpPoints == NULL ) {
     PRT_ERR1( "Failed to open points file %s", pointsFile.c_str() );
-    exit(-1);
+    exit( -1 );
   }
 
   // load list of points and convert to metric coordinates
@@ -59,7 +59,7 @@ CPathPlannerLookup::CPathPlannerLookup( std::string pointsFile,
 
     if ( ret != 2 ) {
       PRT_ERR1( "Points file has wrong format %s", pointsFile.c_str() );
-      exit(-1);
+      exit( -1 );
     }
 
     // convert to metric coordinate system
@@ -78,17 +78,17 @@ CPathPlannerLookup::CPathPlannerLookup( std::string pointsFile,
     mLookupTable[i] = new int[mNumPoints];
 
   // read first line with general info
-  ret = fscanf(mFpTable, "%d points, %d chars/row, %s indexing.\n", &point, &rows, str);
+  ret = fscanf( mFpTable, "%d points, %d chars/row, %s indexing.\n", &point, &rows, str );
 
   // load lookup table
-  for ( unsigned int x = 0; x < mNumPoints; x++ ) {
-    for ( unsigned int y = 0; y < mNumPoints; y++ ) {
+  for ( unsigned int i = 0; i < mNumPoints; i++ ) {
+    for ( unsigned int j = 0; j < mNumPoints; j++ ) {
       ret = fscanf( mFpTable, "%d", &point );
-      if (point >= (int) mNumPoints) {
-        PRT_ERR1("Lookup table %s corrupted", tableFile.c_str() );
-        exit(-1);
+      if ( point >= ( int ) mNumPoints ) {
+        PRT_ERR1( "Lookup table %s corrupted", tableFile.c_str() );
+        exit( -1 );
       }
-      mLookupTable[x][y] = point;
+      mLookupTable[i][j] = point;
     }
   }
 
@@ -110,7 +110,7 @@ CPathPlannerLookup::~CPathPlannerLookup()
     delete[] mLookupTable[i];
 }
 //-----------------------------------------------------------------------------
-int CPathPlannerLookup::findClosesWaypoint( CPose2d pose )
+int CPathPlannerLookup::findClosesWaypoint( const CPose2d pose )
 {
   int idx = -1;
   CPose2d wpPose;
@@ -126,8 +126,8 @@ int CPathPlannerLookup::findClosesWaypoint( CPose2d pose )
     }
   }
 
-  if (idx == -1) {
-    PRT_ERR1("No waypoint found for %s", pose.toStr().c_str());
+  if ( idx == -1 ) {
+    PRT_ERR1( "No waypoint found for %s", pose.toStr().c_str() );
   }
   return idx;
 }
@@ -150,13 +150,18 @@ void CPathPlannerLookup::getPathFromTo( const CPose2d start, const CPose2d end,
   tmpIdx = endIdx;
 
   do {
+    if (( not inBounds( startIdx ) ) || ( not inBounds( tmpIdx ) ) ) {
+      PRT_ERR3( "Lookup table index (start %d, tmp %d) out of bounds [0, %d]",
+                startIdx, tmpIdx, mNumPoints );
+      return;
+    }
     tmpIdx = mLookupTable[startIdx][tmpIdx];
     // finished yet ?
-    if ( (tmpIdx == -1) || ( tmpIdx == startIdx ) ) {
+    if (( tmpIdx == -1 ) || ( tmpIdx == startIdx ) ) {
       break;
     }
-
-    wpList.push_front( *mWaypointList[tmpIdx] );
+    if ( inBounds( tmpIdx) )
+      wpList.push_front( *mWaypointList[tmpIdx] );
     count ++;
   }
   while ( count < mMaxPlanLength );

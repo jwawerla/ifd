@@ -14,14 +14,14 @@ quit_time 3600 # 1 hour of simulated time
 
 resolution 0.02
 
-threads 0
+#threads 0
 
 # configure the GUI window
 window
 (
   size [ 683.000 713.000 ]
 
-  center [ 1.122 5.194 ]
+  center [ 0.944 5.372 ]
   rotate [ 0 0 ]
   scale 11.243
 
@@ -38,6 +38,7 @@ floorplan
   pose [0 0 0 0]
   size [65.000 65.000 0.600]
   bitmap "circle.png"
+  #bitmap "cave.png"
 )
 
 
@@ -51,14 +52,14 @@ define autorob pioneer2dx
 )
 
 autorob( pose [13.637 -15.052 0 -95.589]   name "R01" )
-autorob( pose [-3.843 -22.329 0 -76.232]   name "R02" )
+autorob( pose [23.374 -1.605 0  76.232]   name "R02" )
 autorob( pose [14.091 -0.663 0 -20.801]    name "R03" )
 autorob( pose [-0.383 19.205 0 149.618]    name "R04" )
 autorob( pose [11.515 10.720 0 61.411]     name "R05" )
 autorob( pose [1.927 18.337 0 143.831]     name "R06" )
 autorob( pose [-16.205 14.641 0 -166.750]  name "R07" )
 autorob( pose [17.421 -14.403 0 108.145]   name "R08" )
-autorob( pose [-13.548 -12.590 0 -71.571]  name "R09" )
+autorob( pose [-13.904 17.117 0 -71.571]  name "R09" )
 autorob( pose [-18.970 -0.017 0 -176.924]  name "R10" )
 
 #autorob( pose [-5.333 -7.515 0 -1.811] )
