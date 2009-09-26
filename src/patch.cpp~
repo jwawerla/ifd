@@ -21,7 +21,7 @@
 #include "patch.h"
 
 //-----------------------------------------------------------------------------
-CPatch::CPatch(CPose pose)
+CPatch::CPatch(CPose2d pose)
 {
   mPose = pose;
 }

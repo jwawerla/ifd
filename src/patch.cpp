@@ -24,6 +24,7 @@
 CPatch::CPatch(CPose2d pose)
 {
   mPose = pose;
+  printf("creating patch at %s\n", mPose.toStr().c_str() );
 }
 //-----------------------------------------------------------------------------
 CPatch::~CPatch()

@@ -21,13 +21,12 @@
 
 #include "RapiLooseStage"
 #include "baserobotctrl.h"
-
+#include <vector>
 //-----------------------------------------------------------------------------
 extern "C" int Init ( Stg::Model* mod )
 {
   static bool init = false;
-
-
+  static std::vector<CPatch*> patchList;
   Rapi::CLooseStageRobot* robot;
   ABaseRobotCtrl* robotCtrl;
 
@@ -45,20 +44,24 @@ extern "C" int Init ( Stg::Model* mod )
     // init general stuff
     ErrorInit ( 2, false );
     initRandomNumberGenerator();
+    
+    patchList.push_back( new CPatch ( CPose2d (  0, 26, 0 ) ) );
+    patchList.push_back( new CPatch ( CPose2d ( 17, 17, 0 ) ) );
+    patchList.push_back( new CPatch ( CPose2d ( 26,  0, 0 ) ) );
+    patchList.push_back( new CPatch ( CPose2d ( 17,-26, 0 ) ) );
+    patchList.push_back( new CPatch ( CPose2d (  0,-26, 0 ) ) );
+    patchList.push_back( new CPatch ( CPose2d ( -17, -17, 0) ) );
+    patchList.push_back( new CPatch ( CPose2d ( -26, 0, 0 ) ) );
+    patchList.push_back( new CPatch ( CPose2d ( 17, 17, 0 ) ) );
+    
   }
   //************************************
   // create robot and its controller
   robot = new Rapi::CLooseStageRobot ( mod );
   robotCtrl = new ABaseRobotCtrl ( robot );
 
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 0, 26,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 17, 17,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 26,  0,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 17, -26,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 0, -26,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( -17, -17,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( -26,  0,0 ) ) );
-  robotCtrl->addPatch ( CPatch ( CPose2d ( 17, -17,0 ) ) );
+  for (unsigned int i = 0; i < patchList.size(); i++)
+    robotCtrl->addPatch (  patchList[i] );
 
   return 0; // ok
 

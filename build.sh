@@ -16,10 +16,10 @@ mkdir -p ${DEPENDENS_SRC_DIR}
 
 ######################################
 # get ND
-echo -e ${RED}Fetching autolab-nd ${EC}
-cd ${DEPENDENS_SRC_DIR}
-git clone git@github.com:rtv/autolab-nd.git
-cd ${DEPENDENS_SRC_DIR}/autolab-nd
+#echo -e ${RED}Fetching autolab-nd ${EC}
+#cd ${DEPENDENS_SRC_DIR}
+#git clone git@github.com:rtv/autolab-nd.git
+#cd ${DEPENDENS_SRC_DIR}/autolab-nd
 
 #echo -e ${RED}Reverting autolab-nd to the correct version ${EC}
 #git reset --hard e603ecadda99c8ee6de4cd34c1afd17c406312cb
@@ -43,10 +43,10 @@ make install
 
 ######################################
 # Install nd
-echo -e ${RED}Installing autolab-nd ${EC}
-cd ${DEPENDENS_SRC_DIR}/autolab-nd
-cmake -DCMAKE_INSTALL_PREFIX=${DEPENDENS_INSTALL_DIR} -DPKG_CONFIG_PATH=$DEPENDENS_INSTALL_DIR/lib/pkconfig
-make install
+#echo -e ${RED}Installing autolab-nd ${EC}
+#cd ${DEPENDENS_SRC_DIR}/autolab-nd
+#cmake -DCMAKE_INSTALL_PREFIX=${DEPENDENS_INSTALL_DIR} -DPKG_CONFIG_PATH=$DEPENDENS_INSTALL_DIR/lib/pkconfig
+#make install
 
 ######################################
 # Finishing up

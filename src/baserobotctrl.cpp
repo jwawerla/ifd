@@ -201,15 +201,15 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
     rightDist = mLaser->mRangeData[0].range;
     leftDist = mLaser->mRangeData[mLaser->getNumSamples()-1].range;
     rightFrontDist = mLaser->mRangeData[mLaser->getNumSamples() / 4].range;
-    //rprintf( "left %f %f\n", leftDist, rightDist );
+    //rprintf( "dist %f \n", leftDist + rightDist );
 
     // check if we are in a corridor
-    if ( leftDist + rightDist < 2.5 ) {
-      angle = D2R( -10.0 * ( rightFrontDist - 0.8 ) );
+    if ( leftDist + rightDist < 2.7 ) {
+      angle = D2R( -5000.0 * ( rightFrontDist - 0.8 ) );
       mDrivetrain->setRotationalVelocityCmd( angle );
       mDrivetrain->setTranslationalVelocityCmd( fabs( CRUISE_SPEED * cos( angle ) ) );
       fgRightWallFollow = true;
-      rprintf("rightWallFollow %f\n", R2D(angle));
+      //rprintf("rightWallFollow %f\n", R2D(angle));
     }
 
     if ( not fgRightWallFollow ) {
@@ -223,10 +223,9 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
 
   mReplanCounter ++;
 
-  if (( mReplanCounter > 100 ) && ( mCurrentPatch ) ) {
+  if ( ( mReplanCounter > 100 ) && ( mCurrentPatch ) ) {
     mReplanCounter = 0;
-    //if ( mCurrentPatch )
-    //  mPathPlanner->getPath( mRobotPose, mCurrentPatch->getPose(), mWaypointList );
+    mPathPlanner->getPathFromTo( mRobotPose, mCurrentPatch->getPose(), mWaypointList );
   }
 
   return IN_PROGRESS;
@@ -234,83 +233,16 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
 //-----------------------------------------------------------------------------
 tActionResult ABaseRobotCtrl::actionSelectPatch()
 {
-  int r;
+  unsigned int r;
   do {
     r = ( int ) randNo( 0, mPatchList.size() - 1 );
-  } while ( (r < 0) || r >= mPatchList.size() );
+  } while ( r >= mPatchList.size() );
   mCurrentPatch = &mPatchList[r];
   //rprintf("assigning patch %d %s\n", r, mCurrentPatch->getPose().toStr().c_str());
   assert( mCurrentPatch );
 
   return COMPLETED;
 }
-/*
-//-----------------------------------------------------------------------------
-tActionResult ABaseRobotCtrl::actionFollowWaypointList()
-{
-  if ( mFgStateChanged ) {
-    if ( not mWaypointList.empty() ) {
-      mCurrentWaypoint = mWaypointList.front();
-      mNd->setGoal( mCurrentWaypoint.getPose() );
-      mNd->setEpsilonAngle( D2R( 180.0 ) );
-      mNd->setEpsilonDistance( 1.0 );
-    }
-  }
-
-  if ( mNd->isStalled() ) {
-    mCounter ++;
-
-    if ( mCounter > 40 ) {
-      // we are stalled, so plan a new path
-      //planPathTo( mCurrentDestination->getLocation(), CLOSE_SPACING );
-      // and set the new waypoint if we have one otherwise set final destination
-      if ( not mWaypointList.empty() ) {
-        mCurrentWaypoint = mWaypointList.front();
-        mWaypointList.pop_front();
-        mNd->setGoal( mCurrentWaypoint.getPose() );
-        mNd->setEpsilonAngle( D2R( 180.0 ) );
-        mNd->setEpsilonDistance( 1.0 );
-      }
-      else {
-        mNd->setGoal( mCurrentWaypoint.getPose() );
-        mNd->setEpsilonAngle( D2R( 180.0 ) );
-        mNd->setEpsilonDistance( 1.0 );
-      }
-    }
-  }
-  else
-    mCounter = 0;
-
-  // check if we are the goal
-  if (( mNd->atGoal() ) ||
-      ( mNd->hasCrossedPathNormal() ) ) {
-    if ( mWaypointList.empty() ) {
-      mDrivetrain->stop();
-      return COMPLETED;
-    }
-    else {
-      mCurrentWaypoint = mWaypointList.front();
-      mWaypointList.pop_front();
-      mNd->setGoal( mCurrentWaypoint.getPose() );
-      // did we just pop the last waypoint ?
-      if ( mWaypointList.empty() ) {
-        mNd->setEpsilonAngle( D2R( 25.0 ) );
-        mNd->setEpsilonDistance( 0.5 );
-      }
-      else {
-        mNd->setEpsilonAngle( D2R( 180.0 ) );
-        mNd->setEpsilonDistance( 1.0 );
-      }
-    }
-  }
-
-  // update ND and transfer velocity commands to drivetrain
-  mNd->update( mRobot->getCurrentTime(), mRobotPose, mRobotVelocity );
-  mDrivetrain->setVelocityCmd( mNd->getRecommendedVelocity() );
-
-  return IN_PROGRESS;
-}
-*/
 //-----------------------------------------------------------------------------
 void ABaseRobotCtrl::updateData( float dt )
 {
@@ -322,7 +254,6 @@ void ABaseRobotCtrl::updateData( float dt )
   mElapsedStateTime += dt;
   mStatusStr =  mFsmText[mState];
 
-  //rprintf("robot %s %s\n", mRobotPose.toStr().c_str(), mDrivetrain->getVelocityCmd().toStr().c_str());
   switch ( mState ) {
     case START:
       actionSelectPatch();
@@ -331,7 +262,7 @@ void ABaseRobotCtrl::updateData( float dt )
 
     case SW_PATCH:
       if ( mFgStateChanged ) {
-        rprintf("path %s %s \n", mRobotPose.toStr().c_str(), mCurrentPatch->getPose().toStr().c_str());
+        //rprintf("path %s %s \n", mRobotPose.toStr().c_str(), mCurrentPatch->getPose().toStr().c_str());
         mPathPlanner->getPathFromTo( mRobotPose, mCurrentPatch->getPose(), mWaypointList );
       }
 
@@ -368,10 +299,3 @@ void ABaseRobotCtrl::updateData( float dt )
 }
 //-----------------------------------------------------------------------------
 
-//#define VAR(V,init) __typeof(init) V=(init)
-//#define FOR_EACH(I,C) for(VAR(I,(C).begin());I!=(C).end();I++)
-/*
-  template <class T, class C>
-  void EraseAll( T thing, C& cont )
-  { cont.erase( std::remove( cont.begin(), cont.end(), thing ), cont.end() );
-*/

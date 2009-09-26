@@ -170,9 +170,9 @@ void CPathPlannerLookup::getPathFromTo( const CPose2d start, const CPose2d end,
   wpList.push_front( *mWaypointList[startIdx] );
   wpList.push_back( *mWaypointList[endIdx] );
 
-  for (it = wpList.begin(); it != wpList.end(); it++) {
-     (*it).print();
-  }
+  //for (it = wpList.begin(); it != wpList.end(); it++) {
+  //   (*it).print();
+  //}
 }
 //-----------------------------------------------------------------------------
 
