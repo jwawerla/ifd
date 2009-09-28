@@ -3,6 +3,7 @@ FILE(REMOVE_RECURSE
   "CMakeFiles/ifd.dir/baserobotctrl.cpp.o"
   "CMakeFiles/ifd.dir/pathplannerlookup.cpp.o"
   "CMakeFiles/ifd.dir/patch.cpp.o"
+  "CMakeFiles/ifd.dir/patchmanager.cpp.o"
   "ifd.pdb"
   "ifd.a"
   "ifd.so"

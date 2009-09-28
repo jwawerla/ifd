@@ -23,8 +23,7 @@
 
 #include "RapiLooseStage"
 #include "pathplannerlookup.h"
-#include "patch.h"
-//#include "stagend.h"
+#include "patchinterface.h"
 #include <list>
 #include <vector>
 
@@ -57,17 +56,17 @@ class ABaseRobotCtrl : public ARobotCtrl
      * Adds a patch to the list of patches
      * @param patch to be added
      */
-    void addPatch(CPatch patch);
+    void addPatch(IPatch* patch);
 
   protected:
     /** Current pose of robot */
     CPose2d mRobotPose;
     /** List of patches */
-    std::vector<CPatch> mPatchList;
+    std::vector<IPatch*> mPatchList;
     /** Flags if the state of the FSM has changed */
     bool mFgStateChanged;
     /** Current patch */
-    CPatch* mCurrentPatch;
+    IPatch* mCurrentPatch;
     /** State of FSM */
     tState mState;
     /** Elapsed time since the current state was entered [s] */

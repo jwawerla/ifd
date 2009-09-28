@@ -7,6 +7,7 @@ SET(CMAKE_DEPENDS_CHECK_CXX
   "/home/jwawerla/projects/ifd/src/baserobotctrl.cpp" "/home/jwawerla/projects/ifd/src/CMakeFiles/ifd.dir/baserobotctrl.cpp.o"
   "/home/jwawerla/projects/ifd/src/main.cpp" "/home/jwawerla/projects/ifd/src/CMakeFiles/ifd.dir/main.cpp.o"
   "/home/jwawerla/projects/ifd/src/patch.cpp" "/home/jwawerla/projects/ifd/src/CMakeFiles/ifd.dir/patch.cpp.o"
+  "/home/jwawerla/projects/ifd/src/patchmanager.cpp" "/home/jwawerla/projects/ifd/src/CMakeFiles/ifd.dir/patchmanager.cpp.o"
   "/home/jwawerla/projects/ifd/src/pathplannerlookup.cpp" "/home/jwawerla/projects/ifd/src/CMakeFiles/ifd.dir/pathplannerlookup.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")

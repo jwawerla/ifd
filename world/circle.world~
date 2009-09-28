@@ -5,6 +5,7 @@
 include "pioneer.inc"
 include "map.inc"
 include "sick.inc"
+include "patch.inc"
 
 speedup 10.000
 paused 1
@@ -29,6 +30,64 @@ window
   show_flags 1
 
   interval 50
+)
+
+model
+(
+  ctrl "patchManagerCtrl"
+  name "patchManagerCtrl"
+  pose [ 30.000 30.000 0 0 ]
+  size [1.0 1.0 1.0]
+)
+
+###############################################################################
+# patches
+patch
+(
+  db_count 3
+  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
+  pose [ 0.000 26.000 0 0 ]
+  name "patchA"
+)
+
+patch
+(
+  db_count 3
+  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
+  pose [ 17.000 17.000 0 0 ]
+  name "patchB"
+)
+
+patch
+(
+  db_count 3
+  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
+  pose [ 26.000 0.000 0 0 ]
+  name "patchC"
+)
+
+patch
+(
+  db_count 3
+  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
+  pose [ 17.000 -17.000 0 0 ]
+  name "patchD"
+)
+
+patch
+(
+  db_count 3
+  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
+  pose [ 0.000 -26.000 0 0 ]
+  name "patchE"
+)
+
+patch
+(
+  db_count 3
+  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
+  pose [ -17.000 -17.000 0 0 ]
+  name "patchF"
 )
 
 # load an environment bitmap
@@ -75,4 +134,4 @@ autorob( pose [-18.970 -0.017 0 -176.924]  name "R10" )
 #autorob( pose [3.944 4.674 0 -103.060] )
 #autorob( pose [4.634 6.897 0 -103.060] )
 
-puck( color "green" pose [ 10.0 10.0 0 0] )
+

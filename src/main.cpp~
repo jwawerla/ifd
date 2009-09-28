@@ -21,47 +21,50 @@
 
 #include "RapiLooseStage"
 #include "baserobotctrl.h"
+#include "patchmanager.h"
 #include <vector>
+#include "patch.h"
 //-----------------------------------------------------------------------------
-extern "C" int Init ( Stg::Model* mod )
+extern "C" int Init( Stg::Model* mod )
 {
   static bool init = false;
-  static std::vector<CPatch*> patchList;
+  CPatchManager* manager = CPatchManager::getInstance( mod->GetWorld() );
   Rapi::CLooseStageRobot* robot;
   ABaseRobotCtrl* robotCtrl;
 
-  if ( not init )
-  {
+  if ( not init ) {
     init = true;
-    printf ( "-----------------------------------\n" );
-    printf ( "IFD \n" );
-    printf ( "  build %s %s \n", __DATE__, __TIME__ );
-    printf ( "  compiled against RAPI version %s (%s) build %s\n", RAPI_VERSION(),
-             RAPI_GIT_VERSION(), RAPI_BUILD() );
-    printf ( "\n" );
+    printf( "-----------------------------------\n" );
+    printf( "IFD \n" );
+    printf( "  build %s %s \n", __DATE__, __TIME__ );
+    printf( "  compiled against RAPI version %s (%s) build %s\n", RAPI_VERSION(),
+            RAPI_GIT_VERSION(), RAPI_BUILD() );
+    printf( "\n" );
 
     //************************************
     // init general stuff
-    ErrorInit ( 2, false );
+    ErrorInit( 10, false );
     initRandomNumberGenerator();
-    
-    patchList.push_back( new CPatch ( CPose2d (  0, 26, 0 ) ) );
-    patchList.push_back( new CPatch ( CPose2d ( 17, 17, 0 ) ) );
-    patchList.push_back( new CPatch ( CPose2d ( 26,  0, 0 ) ) );
-    patchList.push_back( new CPatch ( CPose2d ( 17,-26, 0 ) ) );
-    patchList.push_back( new CPatch ( CPose2d (  0,-26, 0 ) ) );
-    patchList.push_back( new CPatch ( CPose2d ( -17, -17, 0) ) );
-    patchList.push_back( new CPatch ( CPose2d ( -26, 0, 0 ) ) );
-    patchList.push_back( new CPatch ( CPose2d ( 17, 17, 0 ) ) );
-    
+
+    //patchList.push_back( new CPatch( CPose2d( 0, 26, 0 ), "A" ) );
+    //patchList.push_back( new CPatch( CPose2d( 17, 17, 0 ), "B" ) );
+    //patchList.push_back( new CPatch( CPose2d( 26,  0, 0 ), "C" ) );
+    //patchList.push_back( new CPatch( CPose2d( 17, -26, 0 ), "D" ) );
+    //patchList.push_back( new CPatch( CPose2d( 0, -26, 0 ), "E" ) );
+    //patchList.push_back( new CPatch( CPose2d( -17, -17, 0 ), "F" ) );
+
+
   }
   //************************************
   // create robot and its controller
-  robot = new Rapi::CLooseStageRobot ( mod );
-  robotCtrl = new ABaseRobotCtrl ( robot );
+  robot = new Rapi::CLooseStageRobot( mod );
+  robotCtrl = new ABaseRobotCtrl( robot );
 
-  for (unsigned int i = 0; i < patchList.size(); i++)
-    robotCtrl->addPatch (  patchList[i] );
+    robotCtrl->addPatch( new CPatch( CPose2d( -26, 0, 0 ), "G" ) );
+    robotCtrl->addPatch( new CPatch( CPose2d( 17, 17, 0 ), "H" ) );
+    
+  //for ( unsigned int i = 0; i < manager->getNumPatches(); i++ )
+    //robotCtrl->addPatch( manager->getPatch(i) );
 
   return 0; // ok
 

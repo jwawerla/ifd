@@ -18,53 +18,16 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  **************************************************************************/
-
-#include "RapiLooseStage"
-#include "baserobotctrl.h"
+ 
+#include <stage.hh>
 #include "patchmanager.h"
-#include <vector>
-#include "patch.h"
+
 //-----------------------------------------------------------------------------
 extern "C" int Init( Stg::Model* mod )
 {
-  static bool init = false;
-  CPatchManager* manager = CPatchManager::getInstance( mod->GetWorld() );
-  Rapi::CLooseStageRobot* robot;
-  ABaseRobotCtrl* robotCtrl;
+  CPatchManager* manager = CPatchManager::getInstance(mod->GetWorld());
+  mod->SetProperty("patchmanager", (void*)manager);
 
-  if ( not init ) {
-    init = true;
-    printf( "-----------------------------------\n" );
-    printf( "IFD \n" );
-    printf( "  build %s %s \n", __DATE__, __TIME__ );
-    printf( "  compiled against RAPI version %s (%s) build %s\n", RAPI_VERSION(),
-            RAPI_GIT_VERSION(), RAPI_BUILD() );
-    printf( "\n" );
-
-    //************************************
-    // init general stuff
-    ErrorInit( 10, false );
-    initRandomNumberGenerator();
-
-    //patchList.push_back( new CPatch( CPose2d( 0, 26, 0 ), "A" ) );
-    //patchList.push_back( new CPatch( CPose2d( 17, 17, 0 ), "B" ) );
-    //patchList.push_back( new CPatch( CPose2d( 26,  0, 0 ), "C" ) );
-    //patchList.push_back( new CPatch( CPose2d( 17, -26, 0 ), "D" ) );
-    //patchList.push_back( new CPatch( CPose2d( 0, -26, 0 ), "E" ) );
-    //patchList.push_back( new CPatch( CPose2d( -17, -17, 0 ), "F" ) );
-
-
-  }
-  //************************************
-  // create robot and its controller
-  robot = new Rapi::CLooseStageRobot( mod );
-  robotCtrl = new ABaseRobotCtrl( robot );
-
-  for ( unsigned int i = 0; i < manager->getNumPatches(); i++ )
-    robotCtrl->addPatch( manager->getPatch(i) );
-
-  return 0; // ok
-
+  return 0;// ok
 }
 //-----------------------------------------------------------------------------
-

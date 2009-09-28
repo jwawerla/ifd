@@ -153,6 +153,34 @@ ifd/fast:
 	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/ifd.dir/build.make src/CMakeFiles/ifd.dir/build
 .PHONY : ifd/fast
 
+# Convenience name for target.
+src/CMakeFiles/patchCtrl.dir/rule:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/patchCtrl.dir/rule
+.PHONY : src/CMakeFiles/patchCtrl.dir/rule
+
+# Convenience name for target.
+patchCtrl: src/CMakeFiles/patchCtrl.dir/rule
+.PHONY : patchCtrl
+
+# fast build rule for target.
+patchCtrl/fast:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchCtrl.dir/build.make src/CMakeFiles/patchCtrl.dir/build
+.PHONY : patchCtrl/fast
+
+# Convenience name for target.
+src/CMakeFiles/patchManagerCtrl.dir/rule:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/patchManagerCtrl.dir/rule
+.PHONY : src/CMakeFiles/patchManagerCtrl.dir/rule
+
+# Convenience name for target.
+patchManagerCtrl: src/CMakeFiles/patchManagerCtrl.dir/rule
+.PHONY : patchManagerCtrl
+
+# fast build rule for target.
+patchManagerCtrl/fast:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchManagerCtrl.dir/build.make src/CMakeFiles/patchManagerCtrl.dir/build
+.PHONY : patchManagerCtrl/fast
+
 baserobotctrl.o: baserobotctrl.cpp.o
 .PHONY : baserobotctrl.o
 
@@ -207,6 +235,8 @@ patch.o: patch.cpp.o
 # target to build an object file
 patch.cpp.o:
 	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/ifd.dir/build.make src/CMakeFiles/ifd.dir/patch.cpp.o
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchCtrl.dir/build.make src/CMakeFiles/patchCtrl.dir/patch.cpp.o
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchManagerCtrl.dir/build.make src/CMakeFiles/patchManagerCtrl.dir/patch.cpp.o
 .PHONY : patch.cpp.o
 
 patch.i: patch.cpp.i
@@ -215,6 +245,8 @@ patch.i: patch.cpp.i
 # target to preprocess a source file
 patch.cpp.i:
 	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/ifd.dir/build.make src/CMakeFiles/ifd.dir/patch.cpp.i
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchCtrl.dir/build.make src/CMakeFiles/patchCtrl.dir/patch.cpp.i
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchManagerCtrl.dir/build.make src/CMakeFiles/patchManagerCtrl.dir/patch.cpp.i
 .PHONY : patch.cpp.i
 
 patch.s: patch.cpp.s
@@ -223,7 +255,87 @@ patch.s: patch.cpp.s
 # target to generate assembly for a file
 patch.cpp.s:
 	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/ifd.dir/build.make src/CMakeFiles/ifd.dir/patch.cpp.s
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchCtrl.dir/build.make src/CMakeFiles/patchCtrl.dir/patch.cpp.s
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchManagerCtrl.dir/build.make src/CMakeFiles/patchManagerCtrl.dir/patch.cpp.s
 .PHONY : patch.cpp.s
+
+patchCtrl.o: patchCtrl.cpp.o
+.PHONY : patchCtrl.o
+
+# target to build an object file
+patchCtrl.cpp.o:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchCtrl.dir/build.make src/CMakeFiles/patchCtrl.dir/patchCtrl.cpp.o
+.PHONY : patchCtrl.cpp.o
+
+patchCtrl.i: patchCtrl.cpp.i
+.PHONY : patchCtrl.i
+
+# target to preprocess a source file
+patchCtrl.cpp.i:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchCtrl.dir/build.make src/CMakeFiles/patchCtrl.dir/patchCtrl.cpp.i
+.PHONY : patchCtrl.cpp.i
+
+patchCtrl.s: patchCtrl.cpp.s
+.PHONY : patchCtrl.s
+
+# target to generate assembly for a file
+patchCtrl.cpp.s:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchCtrl.dir/build.make src/CMakeFiles/patchCtrl.dir/patchCtrl.cpp.s
+.PHONY : patchCtrl.cpp.s
+
+patchmanager.o: patchmanager.cpp.o
+.PHONY : patchmanager.o
+
+# target to build an object file
+patchmanager.cpp.o:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/ifd.dir/build.make src/CMakeFiles/ifd.dir/patchmanager.cpp.o
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchCtrl.dir/build.make src/CMakeFiles/patchCtrl.dir/patchmanager.cpp.o
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchManagerCtrl.dir/build.make src/CMakeFiles/patchManagerCtrl.dir/patchmanager.cpp.o
+.PHONY : patchmanager.cpp.o
+
+patchmanager.i: patchmanager.cpp.i
+.PHONY : patchmanager.i
+
+# target to preprocess a source file
+patchmanager.cpp.i:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/ifd.dir/build.make src/CMakeFiles/ifd.dir/patchmanager.cpp.i
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchCtrl.dir/build.make src/CMakeFiles/patchCtrl.dir/patchmanager.cpp.i
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchManagerCtrl.dir/build.make src/CMakeFiles/patchManagerCtrl.dir/patchmanager.cpp.i
+.PHONY : patchmanager.cpp.i
+
+patchmanager.s: patchmanager.cpp.s
+.PHONY : patchmanager.s
+
+# target to generate assembly for a file
+patchmanager.cpp.s:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/ifd.dir/build.make src/CMakeFiles/ifd.dir/patchmanager.cpp.s
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchCtrl.dir/build.make src/CMakeFiles/patchCtrl.dir/patchmanager.cpp.s
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchManagerCtrl.dir/build.make src/CMakeFiles/patchManagerCtrl.dir/patchmanager.cpp.s
+.PHONY : patchmanager.cpp.s
+
+patchmanagerctrl.o: patchmanagerctrl.cpp.o
+.PHONY : patchmanagerctrl.o
+
+# target to build an object file
+patchmanagerctrl.cpp.o:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchManagerCtrl.dir/build.make src/CMakeFiles/patchManagerCtrl.dir/patchmanagerctrl.cpp.o
+.PHONY : patchmanagerctrl.cpp.o
+
+patchmanagerctrl.i: patchmanagerctrl.cpp.i
+.PHONY : patchmanagerctrl.i
+
+# target to preprocess a source file
+patchmanagerctrl.cpp.i:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchManagerCtrl.dir/build.make src/CMakeFiles/patchManagerCtrl.dir/patchmanagerctrl.cpp.i
+.PHONY : patchmanagerctrl.cpp.i
+
+patchmanagerctrl.s: patchmanagerctrl.cpp.s
+.PHONY : patchmanagerctrl.s
+
+# target to generate assembly for a file
+patchmanagerctrl.cpp.s:
+	cd /home/jwawerla/projects/ifd && $(MAKE) -f src/CMakeFiles/patchManagerCtrl.dir/build.make src/CMakeFiles/patchManagerCtrl.dir/patchmanagerctrl.cpp.s
+.PHONY : patchmanagerctrl.cpp.s
 
 pathplannerlookup.o: pathplannerlookup.cpp.o
 .PHONY : pathplannerlookup.o
@@ -261,6 +373,8 @@ help:
 	@echo "... install/local"
 	@echo "... install/strip"
 	@echo "... list_install_components"
+	@echo "... patchCtrl"
+	@echo "... patchManagerCtrl"
 	@echo "... rebuild_cache"
 	@echo "... baserobotctrl.o"
 	@echo "... baserobotctrl.i"
@@ -271,6 +385,15 @@ help:
 	@echo "... patch.o"
 	@echo "... patch.i"
 	@echo "... patch.s"
+	@echo "... patchCtrl.o"
+	@echo "... patchCtrl.i"
+	@echo "... patchCtrl.s"
+	@echo "... patchmanager.o"
+	@echo "... patchmanager.i"
+	@echo "... patchmanager.s"
+	@echo "... patchmanagerctrl.o"
+	@echo "... patchmanagerctrl.i"
+	@echo "... patchmanagerctrl.s"
 	@echo "... pathplannerlookup.o"
 	@echo "... pathplannerlookup.i"
 	@echo "... pathplannerlookup.s"

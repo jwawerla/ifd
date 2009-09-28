@@ -115,7 +115,7 @@ void ABaseRobotCtrl::transferWaypointToStage()
   }
 }
 //-----------------------------------------------------------------------------
-void ABaseRobotCtrl::addPatch( CPatch patch )
+void ABaseRobotCtrl::addPatch( IPatch* patch )
 {
   mPatchList.push_back( patch );
 }
@@ -237,7 +237,7 @@ tActionResult ABaseRobotCtrl::actionSelectPatch()
   do {
     r = ( int ) randNo( 0, mPatchList.size() - 1 );
   } while ( r >= mPatchList.size() );
-  mCurrentPatch = &mPatchList[r];
+  mCurrentPatch = mPatchList[r];
   //rprintf("assigning patch %d %s\n", r, mCurrentPatch->getPose().toStr().c_str());
   assert( mCurrentPatch );
 

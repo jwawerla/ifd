@@ -21,31 +21,88 @@
 #ifndef PATCH_H
 #define PATCH_H
 
+#include "RapiLooseStage"
 #include "pose2d.h"
+#include "patchinterface.h"
+#include "patchmanager.h"
+
+using namespace Rapi;
 
 /**
  * Defines a patch
  * @author Jens Wawerla <jwawerla@sfu.ca>
-*/
-class CPatch
+ */
+class CPatch : public IPatch
 {
+    friend int stgUpdate( Stg::Model* mod, CPatch* patch );
+
   public:
+
     /**
      * Default constructor
      * @param pose of patch
+     * @param name of patch
      */
-    CPatch(CPose2d pose);
+    CPatch( CPose2d pose, std::string name );
+    /**
+     * Constructs a patch from a Stage model
+     * @param mod stage model
+     */
+    CPatch( Stg::Model* mod );
     /** Default destructor */
-    ~CPatch();
+    virtual ~CPatch();
     /**
      * Gets the pose of the patch
      * @return pose
      */
     CPose2d getPose() const;
 
+  protected:
+    /** Type definition for pucks */
+    typedef struct {
+      Stg::Model* mod;
+    } tPuck;
+    /**
+     * Updates the patch
+     */
+    void update();
+    /**
+     * Place puck randomly
+     * @param puck to be placed
+     */
+    void placePuck( tPuck* puck );
+    /**
+     * Is there a puck in a circle with in radius of pose
+     * @param pose center of circle
+     * @param radius of circle [m]
+     * @return true if there is a puck, false otherwise
+     */
+    bool isPuckIn( CPose2d pose, float radius );
+    /**
+     * Creates the pucks handled by this patch
+     */
+    void createPucks();
+
+
   private:
+    /** Stage model */
+    Stg::Model* mStgModel;
     /** Pose of patch */
     CPose2d mPose;
+    /** Puck renewal rate [1/s] */
+    float mPuckRate;
+    /** Upper puck limit */
+    int mMaxPucks;
+    /** List of pucks */
+    std::vector<tPuck> mPuckList;
+    /** List of free pucks, that is pucks not currently in the patch */
+    std::vector<tPuck> mFreePuckList;
+    /** Name of patch */
+    std::string mName;
+    /** Radius of patch [m] */
+    float mRadius;
+    /** Time stamp when the last puck was placed */
+    float mLastPuckPlacedTimestamp;
 };
 
 #endif

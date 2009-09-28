@@ -145,12 +145,37 @@ src/CMakeFiles/ifd.dir/patch.cpp.o.provides: src/CMakeFiles/ifd.dir/patch.cpp.o.
 src/CMakeFiles/ifd.dir/patch.cpp.o.provides.build: src/CMakeFiles/ifd.dir/patch.cpp.o
 .PHONY : src/CMakeFiles/ifd.dir/patch.cpp.o.provides.build
 
+src/CMakeFiles/ifd.dir/patchmanager.cpp.o: src/CMakeFiles/ifd.dir/flags.make
+src/CMakeFiles/ifd.dir/patchmanager.cpp.o: src/patchmanager.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/jwawerla/projects/ifd/CMakeFiles $(CMAKE_PROGRESS_5)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/CMakeFiles/ifd.dir/patchmanager.cpp.o"
+	cd /home/jwawerla/projects/ifd/src && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/ifd.dir/patchmanager.cpp.o -c /home/jwawerla/projects/ifd/src/patchmanager.cpp
+
+src/CMakeFiles/ifd.dir/patchmanager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ifd.dir/patchmanager.cpp.i"
+	cd /home/jwawerla/projects/ifd/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/jwawerla/projects/ifd/src/patchmanager.cpp > CMakeFiles/ifd.dir/patchmanager.cpp.i
+
+src/CMakeFiles/ifd.dir/patchmanager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ifd.dir/patchmanager.cpp.s"
+	cd /home/jwawerla/projects/ifd/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/jwawerla/projects/ifd/src/patchmanager.cpp -o CMakeFiles/ifd.dir/patchmanager.cpp.s
+
+src/CMakeFiles/ifd.dir/patchmanager.cpp.o.requires:
+.PHONY : src/CMakeFiles/ifd.dir/patchmanager.cpp.o.requires
+
+src/CMakeFiles/ifd.dir/patchmanager.cpp.o.provides: src/CMakeFiles/ifd.dir/patchmanager.cpp.o.requires
+	$(MAKE) -f src/CMakeFiles/ifd.dir/build.make src/CMakeFiles/ifd.dir/patchmanager.cpp.o.provides.build
+.PHONY : src/CMakeFiles/ifd.dir/patchmanager.cpp.o.provides
+
+src/CMakeFiles/ifd.dir/patchmanager.cpp.o.provides.build: src/CMakeFiles/ifd.dir/patchmanager.cpp.o
+.PHONY : src/CMakeFiles/ifd.dir/patchmanager.cpp.o.provides.build
+
 # Object files for target ifd
 ifd_OBJECTS = \
 "CMakeFiles/ifd.dir/main.cpp.o" \
 "CMakeFiles/ifd.dir/baserobotctrl.cpp.o" \
 "CMakeFiles/ifd.dir/pathplannerlookup.cpp.o" \
-"CMakeFiles/ifd.dir/patch.cpp.o"
+"CMakeFiles/ifd.dir/patch.cpp.o" \
+"CMakeFiles/ifd.dir/patchmanager.cpp.o"
 
 # External object files for target ifd
 ifd_EXTERNAL_OBJECTS =
@@ -159,6 +184,7 @@ src/ifd.so: src/CMakeFiles/ifd.dir/main.cpp.o
 src/ifd.so: src/CMakeFiles/ifd.dir/baserobotctrl.cpp.o
 src/ifd.so: src/CMakeFiles/ifd.dir/pathplannerlookup.cpp.o
 src/ifd.so: src/CMakeFiles/ifd.dir/patch.cpp.o
+src/ifd.so: src/CMakeFiles/ifd.dir/patchmanager.cpp.o
 src/ifd.so: /usr/lib/qt4/libQtGui.so
 src/ifd.so: /usr/lib/libpng.so
 src/ifd.so: /usr/lib/libSM.so
@@ -208,6 +234,7 @@ src/CMakeFiles/ifd.dir/requires: src/CMakeFiles/ifd.dir/main.cpp.o.requires
 src/CMakeFiles/ifd.dir/requires: src/CMakeFiles/ifd.dir/baserobotctrl.cpp.o.requires
 src/CMakeFiles/ifd.dir/requires: src/CMakeFiles/ifd.dir/pathplannerlookup.cpp.o.requires
 src/CMakeFiles/ifd.dir/requires: src/CMakeFiles/ifd.dir/patch.cpp.o.requires
+src/CMakeFiles/ifd.dir/requires: src/CMakeFiles/ifd.dir/patchmanager.cpp.o.requires
 .PHONY : src/CMakeFiles/ifd.dir/requires
 
 src/CMakeFiles/ifd.dir/clean:

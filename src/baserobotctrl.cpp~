@@ -115,7 +115,7 @@ void ABaseRobotCtrl::transferWaypointToStage()
   }
 }
 //-----------------------------------------------------------------------------
-void ABaseRobotCtrl::addPatch( CPatch patch )
+void ABaseRobotCtrl::addPatch( CPatch* patch )
 {
   mPatchList.push_back( patch );
 }
@@ -223,7 +223,7 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
 
   mReplanCounter ++;
 
-  if (( mReplanCounter > 100 ) && ( mCurrentPatch ) ) {
+  if ( ( mReplanCounter > 100 ) && ( mCurrentPatch ) ) {
     mReplanCounter = 0;
     mPathPlanner->getPathFromTo( mRobotPose, mCurrentPatch->getPose(), mWaypointList );
   }
@@ -237,7 +237,7 @@ tActionResult ABaseRobotCtrl::actionSelectPatch()
   do {
     r = ( int ) randNo( 0, mPatchList.size() - 1 );
   } while ( r >= mPatchList.size() );
-  mCurrentPatch = &mPatchList[r];
+  mCurrentPatch = mPatchList[r];
   //rprintf("assigning patch %d %s\n", r, mCurrentPatch->getPose().toStr().c_str());
   assert( mCurrentPatch );
 
@@ -254,7 +254,6 @@ void ABaseRobotCtrl::updateData( float dt )
   mElapsedStateTime += dt;
   mStatusStr =  mFsmText[mState];
 
-  //rprintf("robot %s %s\n", mRobotPose.toStr().c_str(), mDrivetrain->getVelocityCmd().toStr().c_str());
   switch ( mState ) {
     case START:
       actionSelectPatch();
@@ -300,10 +299,3 @@ void ABaseRobotCtrl::updateData( float dt )
 }
 //-----------------------------------------------------------------------------
 
-//#define VAR(V,init) __typeof(init) V=(init)
-//#define FOR_EACH(I,C) for(VAR(I,(C).begin());I!=(C).end();I++)
-/*
-  template <class T, class C>
-  void EraseAll( T thing, C& cont )
-  { cont.erase( std::remove( cont.begin(), cont.end(), thing ), cont.end() );
-*/
