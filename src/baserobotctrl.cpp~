@@ -32,7 +32,7 @@ const int AVOID_DURATION = 10;
 ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
 {
   CLooseStageRobot* looseRobot;
-  Stg::Model* stgModel;
+  Stg::ModelBlobfinder* stgBlobfinder;
 
   mElapsedStateTime = 0.0;
   mState = START;
@@ -41,13 +41,15 @@ ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
   mAvoidCount = 0;
   mReplanCounter = 0;
   mCounter = 0;
-  mPatchList.clear();
+  mPatchVector.clear();
 
   //************************************
   // FSM
-  mFsmText[START]    = "start";
-  mFsmText[SW_PATCH] = "switch patch";
-  mFsmText[FORAGE]   = "forage";
+  mFsmText[START]           = "start";
+  mFsmText[SW_PATCH]        = "switch patch";
+  mFsmText[FORAGE]          = "forage";
+  mFsmText[CHOOSE_PATCH]    = "choose";
+  mFsmText[RETURN_TO_PATCH] = "return";
 
   // init path planer
   mPathPlanner = new CPathPlannerLookup( "circle.pts", "circle.fw",
@@ -59,6 +61,7 @@ ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
 
   looseRobot = ( CLooseStageRobot* ) mRobot;
   //looseRobot->findDevice( mFiducial, "model:0.fiducial:0" );
+  looseRobot->findDevice( mBlobFinder, "blobfinder:0" );
   looseRobot->findDevice( mLaser, "laser:0" );
   looseRobot->findDevice( mPowerPack, "powerpack:0" );
   looseRobot->findDevice( mTextDisplay, "textdisplay:0" );
@@ -70,14 +73,18 @@ ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
     exit( -1 );
   }
 
+  // make blobfinder only track puck colors
+  stgBlobfinder = mBlobFinder->getStageModel();
+  stgBlobfinder->RemoveAllColors();
+  stgBlobfinder->AddColor( Stg::Color( 0, 0, 1, 1 ) );
+
+  // construct a gripper
+  mGripper = ( Stg::ModelGripper* )looseRobot->getStageModel()->GetChild( "gripper:0" );
+  assert( mGripper );
+  mGripper->Subscribe();
+
   // get robot pose
   mRobotPose = mDrivetrain->getOdometry()->getPose();
-
-  // Add nearest distance obstacle avoidance to robot
-  stgModel = mDrivetrain->getStageModel();
-  assert( stgModel );
-  //mNd = new CStageNd( stgModel, 0.4, 0.3, 0.2, mRobot->getName() );
-  //mNd->addRangeFinder( mLaser );
 }
 //-----------------------------------------------------------------------------
 ABaseRobotCtrl::~ABaseRobotCtrl()
@@ -115,9 +122,24 @@ void ABaseRobotCtrl::transferWaypointToStage()
   }
 }
 //-----------------------------------------------------------------------------
-void ABaseRobotCtrl::addPatch( CPatch* patch )
+void ABaseRobotCtrl::addPatch( IPatch* patch )
 {
-  mPatchList.push_back( patch );
+  mPatchVector.push_back( patch );
+}
+//-----------------------------------------------------------------------------
+CPose2d ABaseRobotCtrl::getPose() const
+{
+  return mRobotPose;
+}
+//-----------------------------------------------------------------------------
+bool ABaseRobotCtrl::inPatch() const
+{
+  if ( mCurrentPatch ) {
+    if ( mRobotPose.distance( mCurrentPatch->getPose() ) <
+         mCurrentPatch->getRadius() + 2.0 )
+      return true;
+  }
+  return false;
 }
 //-----------------------------------------------------------------------------
 bool ABaseRobotCtrl::obstacleAvoid()
@@ -176,8 +198,6 @@ bool ABaseRobotCtrl::obstacleAvoid()
 tActionResult ABaseRobotCtrl::actionFollowWaypointList()
 {
   float angle;
-  float leftDist;
-  float rightDist;
   float rightFrontDist;
   bool fgRightWallFollow = false;
 
@@ -198,13 +218,11 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
   }
 
   if ( not obstacleAvoid() ) {
-    rightDist = mLaser->mRangeData[0].range;
-    leftDist = mLaser->mRangeData[mLaser->getNumSamples()-1].range;
+
     rightFrontDist = mLaser->mRangeData[mLaser->getNumSamples() / 4].range;
-    //rprintf( "dist %f \n", leftDist + rightDist );
 
     // check if we are in a corridor
-    if ( leftDist + rightDist < 2.7 ) {
+    if ( inCorridor() ) {
       angle = D2R( -5000.0 * ( rightFrontDist - 0.8 ) );
       mDrivetrain->setRotationalVelocityCmd( angle );
       mDrivetrain->setTranslationalVelocityCmd( fabs( CRUISE_SPEED * cos( angle ) ) );
@@ -221,12 +239,69 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
     }
   }
 
+  // since way points are very sparse, it is a good idea to replan every
+  // once in a while to make sure we are not in a local minima
   mReplanCounter ++;
+  //if (( mReplanCounter > 100 ) && ( mCurrentPatch ) ) {
+  // mReplanCounter = 0;
+  // mPathPlanner->getPathFromTo( mRobotPose, mCurrentPatch->getPose(),
+  //                               mWaypointList );
+  //}
 
-  if ( ( mReplanCounter > 100 ) && ( mCurrentPatch ) ) {
-    mReplanCounter = 0;
-    mPathPlanner->getPathFromTo( mRobotPose, mCurrentPatch->getPose(), mWaypointList );
+  return IN_PROGRESS;
+}
+//-----------------------------------------------------------------------------
+tActionResult ABaseRobotCtrl::actionForage()
+{
+  Stg::Model puck;
+  bool fgCloseToPuck = false;
+  unsigned int center;
+  float turnRate;
+  float speed;
+
+  if ( mBlobFinder->getNumReadings() > 0 ) {
+    center = ( mBlobFinder->mBlobData[0].right +
+               mBlobFinder->mBlobData[0].left ) / 2;
+    turnRate = ( center - ( mBlobFinder->getScanWidth() / 2.0 ) ) / -200.0;
+    printf( "turnRate %f %d %d \n", R2D( turnRate ), mBlobFinder->getScanWidth(), center );
+    if ( mBlobFinder->mBlobData[0].range < 0.75 )
+      fgCloseToPuck = true;
+
+    if ( fabs( turnRate ) < 0.05 )
+      speed = 0.3;
+    else
+      speed = 0.05;
+    mDrivetrain->setVelocityCmd( speed, turnRate );
+
+    if ( mGripper->GetConfig().beam[0] )
+      puck = mGripper->GetConfig().beam[0];
+    if ( mGripper->GetConfig().beam[1] )
+      puck = mGripper->GetConfig().beam[1];
+
   }
+  else {
+    // nothing in view, go straight
+    mDrivetrain->setVelocityCmd( CRUISE_SPEED, 0.0 );
+  }
+
+  if ( not fgCloseToPuck )
+    obstacleAvoid();
+
+  return IN_PROGRESS;
+}
+//-----------------------------------------------------------------------------
+tActionResult ABaseRobotCtrl::actionReturnToPatch()
+{
+  float angle;
+
+  angle = atan2( mCurrentWaypoint.getPose().mY - mRobotPose.mY,
+                 mCurrentWaypoint.getPose().mX - mRobotPose.mX );
+  angle = normalizeAngle( angle - mRobotPose.mYaw );
+  mDrivetrain->setTranslationalVelocityCmd( fabs( CRUISE_SPEED * cos( angle ) ) );
+  mDrivetrain->setRotationalVelocityCmd( angle );
+
+  if ( inPatch() )
+    return COMPLETED;
 
   return IN_PROGRESS;
 }
@@ -235,9 +310,10 @@ tActionResult ABaseRobotCtrl::actionSelectPatch()
 {
   unsigned int r;
   do {
-    r = ( int ) randNo( 0, mPatchList.size() - 1 );
-  } while ( r >= mPatchList.size() );
-  mCurrentPatch = mPatchList[r];
+    r = ( int ) randNo( 0, mPatchVector.size() - 1 );
+  }
+  while ( r >= mPatchVector.size() );
+  mCurrentPatch = mPatchVector[r];
   //rprintf("assigning patch %d %s\n", r, mCurrentPatch->getPose().toStr().c_str());
   assert( mCurrentPatch );
 
@@ -256,6 +332,10 @@ void ABaseRobotCtrl::updateData( float dt )
 
   switch ( mState ) {
     case START:
+      mState = CHOOSE_PATCH;
+      break;
+
+    case CHOOSE_PATCH:
       actionSelectPatch();
       mState = SW_PATCH;
       break;
@@ -266,13 +346,22 @@ void ABaseRobotCtrl::updateData( float dt )
         mPathPlanner->getPathFromTo( mRobotPose, mCurrentPatch->getPose(), mWaypointList );
       }
 
-      if ( actionFollowWaypointList() == COMPLETED ) {
+      if (( actionFollowWaypointList() == COMPLETED ) ||
+          ( inPatch() ) ) {
         mState = FORAGE;
       }
       break;
 
     case FORAGE:
-      mState = START;
+      if ( actionForage() == COMPLETED )
+        mState = CHOOSE_PATCH;
+      if ( not inPatch() )
+        mState = SW_PATCH;
+      break;
+
+    case RETURN_TO_PATCH:
+      if ( actionReturnToPatch() == COMPLETED )
+        mState = FORAGE;
       break;
 
     default:
@@ -285,7 +374,7 @@ void ABaseRobotCtrl::updateData( float dt )
   transferWaypointToStage();
 
   // set text display
-  mTextDisplay->setText(  mCurrentPatch->getPose().toStr().c_str() ); //mStatusStr.c_str() );
+  mTextDisplay->setText( mStatusStr.c_str() );
 
   // Handle FSM status stuff
   if ( mState != mPrevState ) {

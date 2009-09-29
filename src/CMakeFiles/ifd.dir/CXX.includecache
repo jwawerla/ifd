@@ -73,6 +73,8 @@ pathplannerlookup.h
 /home/jwawerla/projects/ifd/src/pathplannerlookup.h
 patchinterface.h
 /home/jwawerla/projects/ifd/src/patchinterface.h
+robotctrlinterface.h
+/home/jwawerla/projects/ifd/src/robotctrlinterface.h
 list
 -
 vector
@@ -127,6 +129,8 @@ stage.hh
 -
 patchinterface.h
 /home/jwawerla/projects/ifd/src/patchinterface.h
+robotctrlinterface.h
+/home/jwawerla/projects/ifd/src/robotctrlinterface.h
 
 /home/jwawerla/projects/ifd/src/pathplannerlookup.cpp
 pathplannerlookup.h
@@ -147,6 +151,10 @@ vector
 -
 list
 -
+
+/home/jwawerla/projects/ifd/src/robotctrlinterface.h
+pose2d.h
+/home/jwawerla/projects/ifd/src/pose2d.h
 
 /usr/include/fltk-1.1/FL/Enumerations.H
 Fl_Export.H
@@ -267,6 +275,8 @@ switcharray.h
 local/include/autolab-rapi-0.1/switcharray.h
 analogsensorarray.h
 local/include/autolab-rapi-0.1/analogsensorarray.h
+blobfinder.h
+local/include/autolab-rapi-0.1/blobfinder.h
 
 local/include/autolab-rapi-0.1/analogsensorarray.h
 device.h
@@ -277,6 +287,10 @@ device.h
 local/include/autolab-rapi-0.1/device.h
 pose2d.h
 local/include/autolab-rapi-0.1/pose2d.h
+
+local/include/autolab-rapi-0.1/blobfinder.h
+device.h
+local/include/autolab-rapi-0.1/device.h
 
 local/include/autolab-rapi-0.1/conversions.h
 
@@ -447,6 +461,8 @@ switcharray.h
 local/include/autolab-rapi-0.1/switcharray.h
 analogsensorarray.h
 local/include/autolab-rapi-0.1/analogsensorarray.h
+blobfinder.h
+local/include/autolab-rapi-0.1/blobfinder.h
 variablemonitor.h
 local/include/autolab-rapi-0.1/variablemonitor.h
 list
@@ -531,6 +547,14 @@ loosestagelights.h
 local/include/autolab-rapi-stage-0.1/loosestagelights.h
 loosestagetextdisplay.h
 local/include/autolab-rapi-stage-0.1/loosestagetextdisplay.h
+loosestageblobfinder.h
+local/include/autolab-rapi-stage-0.1/loosestageblobfinder.h
+
+local/include/autolab-rapi-stage-0.1/loosestageblobfinder.h
+stageblobfinder.h
+local/include/autolab-rapi-stage-0.1/stageblobfinder.h
+stage.hh
+local/include/autolab-rapi-stage-0.1/stage.hh
 
 local/include/autolab-rapi-stage-0.1/loosestagedrivetrain2dof.h
 stagedrivetrain2dof.h
@@ -581,6 +605,8 @@ loosestagetextdisplay.h
 local/include/autolab-rapi-stage-0.1/loosestagetextdisplay.h
 loosestagelights.h
 local/include/autolab-rapi-stage-0.1/loosestagelights.h
+loosestageblobfinder.h
+local/include/autolab-rapi-stage-0.1/loosestageblobfinder.h
 
 local/include/autolab-rapi-stage-0.1/loosestagesonar.h
 stage.hh
@@ -591,6 +617,12 @@ local/include/autolab-rapi-stage-0.1/stagesonar.h
 local/include/autolab-rapi-stage-0.1/loosestagetextdisplay.h
 stagetextdisplay.h
 local/include/autolab-rapi-stage-0.1/stagetextdisplay.h
+stage.hh
+local/include/autolab-rapi-stage-0.1/stage.hh
+
+local/include/autolab-rapi-stage-0.1/stageblobfinder.h
+blobfinder.h
+local/include/autolab-rapi-stage-0.1/blobfinder.h
 stage.hh
 local/include/autolab-rapi-stage-0.1/stage.hh
 

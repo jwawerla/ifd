@@ -18,38 +18,31 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  **************************************************************************/
-
-#ifndef PATCH_INTERFACE_H
-#define PATCH_INTERFACE_H
+#ifndef IROBOTCTRL_H
+#define IROBOTCTRL_H
 
 #include "pose2d.h"
 
-using namespace Rapi;
-
 /**
- * Interface class for patches, this exposes the interface to a patch that
- * is used by the robots
- * @author Jens Wawerla
+ * Interface to the robot control used by the patch to get the position of the
+ * robot and avoid placing puck on top of robots during renewal
+ * @author Jens Wawerla (jwawerla@sfu.ca)
  */
-class IPatch
+class IRobotCtrl
 {
   public:
     /** Default destructor */
-    virtual ~IPatch() {};
+    virtual ~IRobotCtrl() {};
     /**
-     * Gets the pose of the patch
+     * Gets the robots current pose
      * @return pose
      */
     virtual CPose2d getPose() const = 0;
-    /**
-     * Gets the radius of a patch
-     * @return [m]
-     */
-    virtual float getRadius() const = 0;
 
   protected:
     /** Default constructor */
-    IPatch() {};
+    IRobotCtrl() {};
+
 };
 
 #endif

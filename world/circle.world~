@@ -32,6 +32,17 @@ window
   interval 50
 )
 
+# load an environment bitmap
+floorplan
+(
+  name "circle"
+  pose [0 0 0 0]
+  size [65.000 65.000 0.600]
+  bitmap "circle.png"
+  #bitmap "cave.png"
+)
+
+
 model
 (
   ctrl "patchManagerCtrl"
@@ -77,7 +88,7 @@ patch
 patch
 (
   db_count 3
-  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
+  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>6.0"]
   pose [ 0.000 -26.000 0 0 ]
   name "patchE"
 )
@@ -90,36 +101,45 @@ patch
   name "patchF"
 )
 
-# load an environment bitmap
-floorplan
+patch
 (
-  name "circle"
-  pose [0 0 0 0]
-  size [65.000 65.000 0.600]
-  bitmap "circle.png"
-  #bitmap "cave.png"
+  db_count 3
+  db [ "puck_rate<float>0.01" "max_pucks<int>50" "radius<float>5.0"]
+  pose [ -26.000 0.000 0 0 ]
+  name "patchG"
+)
+patch
+(
+  db_count 3
+  db [ "puck_rate<float>0.01" "max_pucks<int>50" "radius<float>5.0"]
+  pose [ -17.000 17.000 0 0 ]
+  name "patchH"
 )
 
 
+###############################################################################
+# Robots
 define autorob pioneer2dx
 (
+ blobfinder(range 1.0)
+ gripper(pose [0.2 0 -0.3 0])
  sicklaser( samples 32 range_max 5 laser_return 2 watts 30 )
  ctrl "ifd"
  joules 1000000
  joules_capacity 400000
- fiducial_return 0
+ #fiducial_return 0
 )
 
 autorob( pose [17.106 11.809 0 -95.589]   name "R01" )
-autorob( pose [23.374 -1.605 0  76.232]    name "R02" )
-autorob( pose [14.091 -0.663 0 -20.801]    name "R03" )
-autorob( pose [-0.383 19.205 0 149.618]    name "R04" )
-autorob( pose [11.515 10.720 0 61.411]     name "R05" )
-autorob( pose [1.927 18.337 0 143.831]     name "R06" )
-autorob( pose [-16.205 14.641 0 -166.750]  name "R07" )
-autorob( pose [25.337 -1.506 0 108.145]   name "R08" )
-autorob( pose [-13.904 17.117 0 -71.571]   name "R09" )
-autorob( pose [-18.970 -0.017 0 -176.924]  name "R10" )
+#autorob( pose [23.374 -1.605 0  76.232]    name "R02" )
+#autorob( pose [14.091 -0.663 0 -20.801]    name "R03" )
+#autorob( pose [-0.383 19.205 0 149.618]    name "R04" )
+#autorob( pose [11.515 10.720 0 61.411]     name "R05" )
+#autorob( pose [1.927 18.337 0 143.831]     name "R06" )
+#autorob( pose [-16.205 14.641 0 -166.750]  name "R07" )
+#autorob( pose [25.337 -1.506 0 108.145]   name "R08" )
+#autorob( pose [-13.904 17.117 0 -71.571]   name "R09" )
+#autorob( pose [-18.970 -0.017 0 -176.924]  name "R10" )
 
 #autorob( pose [-5.333 -7.515 0 -1.811] )
 #autorob( pose [-1.496 1.724 0 -116.317]  )

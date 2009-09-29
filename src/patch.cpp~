@@ -21,6 +21,7 @@
 #include "patch.h"
 #include <assert.h>
 
+
 //-----------------------------------------------------------------------------
 int stgUpdate( Stg::Model* mod, CPatch* patch )
 {
@@ -28,26 +29,28 @@ int stgUpdate( Stg::Model* mod, CPatch* patch )
   return 0; // ok
 }
 //-----------------------------------------------------------------------------
-CPatch::CPatch( CPose2d pose, std::string name ) : IPatch()
+CPatch::CPatch( CPose2d pose, std::string name ) : IPatch(),
+    MIN_PUCK_PUCK_SPACING( 0.6 ),
+    MIN_PUCK_ROBOT_SPACING( 1.5 )
 {
-  CPatchManager* manager = CPatchManager::getInstance( NULL );
-
+  mPatchManager = CPatchManager::getInstance( NULL );
   mPose = pose;
   mName = name;
   mRadius = 2.5;
   mLastPuckPlacedTimestamp = 0.0;
 
-  manager->registerPatch( this );
+  mPatchManager->registerPatch( this );
 }
 //-----------------------------------------------------------------------------
-CPatch::CPatch( Stg::Model* mod ) : IPatch()
+CPatch::CPatch( Stg::Model* mod ) : IPatch(),
+    MIN_PUCK_PUCK_SPACING( 0.6 ),
+    MIN_PUCK_ROBOT_SPACING( 3.5 )
 {
-  CPatchManager* manager = CPatchManager::getInstance( mod->GetWorld() );
-
   Stg::Pose pose;
 
   assert( mod );
-  manager->registerPatch( this );
+  mPatchManager = CPatchManager::getInstance( mod->GetWorld() );
+  mPatchManager->registerPatch( this );
   mStgModel = mod;
   pose = mStgModel->GetPose();
   mPose.mX = pose.x;
@@ -92,17 +95,18 @@ void CPatch::createPucks()
   //PRT_MSG1( 4, "Generating %d pucks ", mMaxPucks );
   //printf("Generating %d pucks \n", mMaxPucks);
   for ( int i = 0; i < mMaxPucks; i++ ) {
-    //puck.mod = new Stg::Model(world);
     puck.mod = world->CreateModel( mStgModel, "model" );
+    //puck.mod = world->CreateModel( NULL, "model" );
     assert( puck.mod );
     geom = puck.mod->GetGeom();
-    geom.size.x = 0.3;
-    geom.size.y = 0.3;
+    geom.size.x = 0.2;
+    geom.size.y = 0.2;
     geom.size.z = 0.4;
     puck.mod->SetGeom( geom );
     pose = puck.mod->GetPose();
-    pose.x = mPose.mX - 30;
-    pose.y = mPose.mY + 30;
+    pose.x = 30 - mPose.mX;
+    pose.y = 30 - mPose.mY;
+    puck.mod->vis.gripper_return = true;
     puck.mod->SetPose( pose );
     puck.mod->SetColor( color );
     snprintf( name, 25, "puck_%s_%d", mName.c_str(), i );
@@ -147,6 +151,7 @@ bool CPatch::isPuckIn( CPose2d pose, float radius )
 //-----------------------------------------------------------------------------
 void CPatch::placePuck( tPuck* puck )
 {
+  int timeoutCount = 0;
   Stg::Pose pose;
   float x;
   float y;
@@ -154,20 +159,30 @@ void CPatch::placePuck( tPuck* puck )
   do {
     x =  randNo( -mRadius, mRadius );
     y =  randNo( -mRadius, mRadius );
+    timeoutCount++;
+    if (timeoutCount > 100) {
+      PRT_ERR1("Failed to place pucks in patch %s", mName.c_str() );
+      return;
+    }
   }
-  while ( isPuckIn( CPose2d( x, y, 0.0 ), 0.6 ) );
+  while ( isPuckIn( CPose2d( x, y, 0.0 ), MIN_PUCK_PUCK_SPACING ) ||
+          mPatchManager->isRobotIn( CPose2d( mPose.mX + x, mPose.mY + y, 0.0 ),
+                                    MIN_PUCK_ROBOT_SPACING ) );
 
   pose = puck->mod->GetPose();
   pose.x = x;
   pose.y = y;
   puck->mod->SetPose( pose );
-  puck->inPatch = true;
-
 }
 //-----------------------------------------------------------------------------
 CPose2d CPatch::getPose() const
 {
   return mPose;
+}
+//-----------------------------------------------------------------------------
+float CPatch::getRadius() const
+{
+  return mRadius;
 }
 //-----------------------------------------------------------------------------
 

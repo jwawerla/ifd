@@ -24,60 +24,86 @@
 
 int stgUpdate( Stg::Model* mod, CPatchManager* manager )
 {
-  printf("stgUpdate\n");
+  printf( "stgUpdate\n" );
   return 0; // ok
 }
 
 //-----------------------------------------------------------------------------
-CPatchManager::CPatchManager(Stg::Model* mod)
+CPatchManager::CPatchManager( Stg::Model* mod )
 {
-  assert(mod);
+  assert( mod );
   //mod->AddUpdateCallback(( Stg::stg_model_callback_t ) stgUpdate, this );
-  printf("CPatchManager::CPatchManager()\n"); 
 }
 //-----------------------------------------------------------------------------
 CPatchManager::~CPatchManager()
 {
 }
 //-----------------------------------------------------------------------------
-CPatchManager* CPatchManager::getInstance(Stg::World* world)
+CPatchManager* CPatchManager::getInstance( Stg::World* world )
 {
   Stg::Model* patchManagerCtrlMod;
   static CPatchManager* instance = NULL;
 
-  if (instance == NULL) {
-    assert(world);
-    patchManagerCtrlMod = world->GetModel( "patchManagerCtrl");
+  if ( instance == NULL ) {
+    assert( world );
+    patchManagerCtrlMod = world->GetModel( "patchManagerCtrl" );
 
     if ( patchManagerCtrlMod ) {
-      instance = (CPatchManager*)(patchManagerCtrlMod->GetProperty("patchmanager") );
+      instance = ( CPatchManager* )( patchManagerCtrlMod->GetProperty( "patchmanager" ) );
     }
-   if (instance == NULL) {
-      instance = new CPatchManager(patchManagerCtrlMod);
+    if ( instance == NULL ) {
+      instance = new CPatchManager( patchManagerCtrlMod );
       if ( patchManagerCtrlMod )
-        patchManagerCtrlMod->SetProperty("patchmanager", (void*)instance);
+        patchManagerCtrlMod->SetProperty( "patchmanager", ( void* )instance );
     }
   }
   return instance;
 }
 //-----------------------------------------------------------------------------
+void CPatchManager::registerRobotCtrl( IRobotCtrl* ctrl )
+{
+  mRobotCtrlVector.push_back( ctrl );
+}
+//-----------------------------------------------------------------------------
 void CPatchManager::registerPatch( IPatch* patch )
 {
-  mPatchList.push_back(patch);
+  mPatchVector.push_back( patch );
+}
+//-----------------------------------------------------------------------------
+unsigned int CPatchManager::getNumRobotCtrl() const
+{
+  return mRobotCtrlVector.size();
+}
+//-----------------------------------------------------------------------------
+IRobotCtrl* CPatchManager::getRobotCtrl( unsigned int idx )
+{
+  if ( idx < mRobotCtrlVector.size() )
+    return mRobotCtrlVector[idx];
+
+  return NULL; // robot controller found
 }
 //-----------------------------------------------------------------------------
 unsigned int CPatchManager::getNumPatches() const
 {
-  return mPatchList.size();
+  return mPatchVector.size();
 }
 //-----------------------------------------------------------------------------
-IPatch* CPatchManager::getPatch(unsigned int idx)
+IPatch* CPatchManager::getPatch( unsigned int idx )
 {
-  if (idx < mPatchList.size() )
-    return mPatchList[idx];
+  if ( idx < mPatchVector.size() )
+    return mPatchVector[idx];
 
   return NULL; // patch not found
 }
 //-----------------------------------------------------------------------------
+bool CPatchManager::isRobotIn( CPose2d pose, float radius ) const
+{
+  for ( unsigned int i = 0; i < mRobotCtrlVector.size(); i++ ) {
+    if ( mRobotCtrlVector[i]->getPose().distance( pose ) < radius )
+      return true; // robot within circle around pose
+  }
 
+  return false; // all clear not robot in area
+}
+//-----------------------------------------------------------------------------
 

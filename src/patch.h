@@ -57,7 +57,16 @@ class CPatch : public IPatch
      * @return pose
      */
     CPose2d getPose() const;
-
+    /**
+     * Gets the radius of a patch
+     * @return [m]
+     */
+    float getRadius() const;
+    /**
+     * Removes a puck from a patch, because it was consumed by a forager
+     *
+    void puckConsumed(Stg::Model* puck);
+    
   protected:
     /** Type definition for pucks */
     typedef struct {
@@ -86,8 +95,14 @@ class CPatch : public IPatch
 
 
   private:
+    /** Minimum Spacing between any puck and a newly placed puck [m] */
+    const float MIN_PUCK_PUCK_SPACING;
+    /** Minimum Spacing between any robot and a newly placed puck [m] */
+    const float MIN_PUCK_ROBOT_SPACING;
     /** Stage model */
     Stg::Model* mStgModel;
+    /** Central patch manager */
+    CPatchManager* mPatchManager;
     /** Pose of patch */
     CPose2d mPose;
     /** Puck renewal rate [1/s] */

@@ -21,7 +21,7 @@ define floorplan model
 
 define zone model
 (
-  color	"orange"
+  color "orange"
   size [ 2 2 0.02 ]
 
   gui_nose 0
@@ -32,5 +32,5 @@ define zone model
   # insensible to collision and range sensors
   obstacle_return 0
   laser_return 0
-  ranger_return 0  
+  ranger_return 0
 )

@@ -24,6 +24,7 @@
 #include <vector>
 #include <stage.hh>
 #include "patchinterface.h"
+#include "robotctrlinterface.h"
 
 
 /**
@@ -58,6 +59,29 @@ class CPatchManager
      * @return patch or NULL
      */
     IPatch* getPatch(unsigned int idx);
+    /**
+     * Register robot controller
+     * @param ctrl to register
+     */
+    void registerRobotCtrl(IRobotCtrl* ctrl );
+    /**
+     * Gets the number of available robot controllers
+     * @return number of controllers
+     */
+    unsigned int getNumRobotCtrl() const;
+    /**
+     * Gets the robot controller of index i or NULL if the controller does not exist
+     * @param idx of controller to get
+     * @return controller or NULL
+     */
+    IRobotCtrl* getRobotCtrl(unsigned int idx);
+    /**
+     * Checks if a robot is with in a circle with radius around pose
+     * @param pose to check
+     * @param radius [m]
+     * @return true if robot is within the circle false otherwise
+     */
+    bool isRobotIn(CPose2d pose, float radius) const;
 
   protected:
     /**
@@ -67,7 +91,9 @@ class CPatchManager
     CPatchManager(Stg::Model* mod);
 
     /** List of registered patches */
-    std::vector<IPatch*> mPatchList;
+    std::vector<IPatch*> mPatchVector;
+    /** List of registered robot controllers */
+    std::vector<IRobotCtrl*> mRobotCtrlVector;
 };
 
 

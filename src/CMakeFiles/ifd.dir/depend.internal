@@ -7,6 +7,7 @@ src/CMakeFiles/ifd.dir/baserobotctrl.cpp.o
  /home/jwawerla/projects/ifd/src/baserobotctrl.h
  /home/jwawerla/projects/ifd/src/patchinterface.h
  /home/jwawerla/projects/ifd/src/pathplannerlookup.h
+ /home/jwawerla/projects/ifd/src/robotctrlinterface.h
  /usr/include/fltk-1.1/FL/Enumerations.H
  /usr/include/fltk-1.1/FL/Fl.H
  /usr/include/fltk-1.1/FL/Fl_Box.H
@@ -24,6 +25,7 @@ src/CMakeFiles/ifd.dir/baserobotctrl.cpp.o
  local/include/autolab-rapi-0.1/RapiCore
  local/include/autolab-rapi-0.1/analogsensorarray.h
  local/include/autolab-rapi-0.1/binarysensorarray.h
+ local/include/autolab-rapi-0.1/blobfinder.h
  local/include/autolab-rapi-0.1/conversions.h
  local/include/autolab-rapi-0.1/datalogger.h
  local/include/autolab-rapi-0.1/dataupdateobserver.h
@@ -58,6 +60,7 @@ src/CMakeFiles/ifd.dir/baserobotctrl.cpp.o
  local/include/autolab-rapi-0.1/velocity2d.h
  local/include/autolab-rapi-0.1/waypoint2d.h
  local/include/autolab-rapi-stage-0.1/RapiLooseStage
+ local/include/autolab-rapi-stage-0.1/loosestageblobfinder.h
  local/include/autolab-rapi-stage-0.1/loosestagedrivetrain2dof.h
  local/include/autolab-rapi-stage-0.1/loosestagefiducialfinder.h
  local/include/autolab-rapi-stage-0.1/loosestagelaser.h
@@ -66,6 +69,7 @@ src/CMakeFiles/ifd.dir/baserobotctrl.cpp.o
  local/include/autolab-rapi-stage-0.1/loosestagerobot.h
  local/include/autolab-rapi-stage-0.1/loosestagesonar.h
  local/include/autolab-rapi-stage-0.1/loosestagetextdisplay.h
+ local/include/autolab-rapi-stage-0.1/stageblobfinder.h
  local/include/autolab-rapi-stage-0.1/stagedrivetrain2dof.h
  local/include/autolab-rapi-stage-0.1/stagefiducialfinder.h
  local/include/autolab-rapi-stage-0.1/stagelaser.h
@@ -82,6 +86,7 @@ src/CMakeFiles/ifd.dir/main.cpp.o
  /home/jwawerla/projects/ifd/src/patchinterface.h
  /home/jwawerla/projects/ifd/src/patchmanager.h
  /home/jwawerla/projects/ifd/src/pathplannerlookup.h
+ /home/jwawerla/projects/ifd/src/robotctrlinterface.h
  /usr/include/fltk-1.1/FL/Enumerations.H
  /usr/include/fltk-1.1/FL/Fl.H
  /usr/include/fltk-1.1/FL/Fl_Box.H
@@ -99,6 +104,7 @@ src/CMakeFiles/ifd.dir/main.cpp.o
  local/include/autolab-rapi-0.1/RapiCore
  local/include/autolab-rapi-0.1/analogsensorarray.h
  local/include/autolab-rapi-0.1/binarysensorarray.h
+ local/include/autolab-rapi-0.1/blobfinder.h
  local/include/autolab-rapi-0.1/conversions.h
  local/include/autolab-rapi-0.1/datalogger.h
  local/include/autolab-rapi-0.1/dataupdateobserver.h
@@ -133,6 +139,7 @@ src/CMakeFiles/ifd.dir/main.cpp.o
  local/include/autolab-rapi-0.1/velocity2d.h
  local/include/autolab-rapi-0.1/waypoint2d.h
  local/include/autolab-rapi-stage-0.1/RapiLooseStage
+ local/include/autolab-rapi-stage-0.1/loosestageblobfinder.h
  local/include/autolab-rapi-stage-0.1/loosestagedrivetrain2dof.h
  local/include/autolab-rapi-stage-0.1/loosestagefiducialfinder.h
  local/include/autolab-rapi-stage-0.1/loosestagelaser.h
@@ -141,6 +148,7 @@ src/CMakeFiles/ifd.dir/main.cpp.o
  local/include/autolab-rapi-stage-0.1/loosestagerobot.h
  local/include/autolab-rapi-stage-0.1/loosestagesonar.h
  local/include/autolab-rapi-stage-0.1/loosestagetextdisplay.h
+ local/include/autolab-rapi-stage-0.1/stageblobfinder.h
  local/include/autolab-rapi-stage-0.1/stagedrivetrain2dof.h
  local/include/autolab-rapi-stage-0.1/stagefiducialfinder.h
  local/include/autolab-rapi-stage-0.1/stagelaser.h
@@ -155,6 +163,7 @@ src/CMakeFiles/ifd.dir/patch.cpp.o
  /home/jwawerla/projects/ifd/src/patch.h
  /home/jwawerla/projects/ifd/src/patchinterface.h
  /home/jwawerla/projects/ifd/src/patchmanager.h
+ /home/jwawerla/projects/ifd/src/robotctrlinterface.h
  /usr/include/fltk-1.1/FL/Enumerations.H
  /usr/include/fltk-1.1/FL/Fl.H
  /usr/include/fltk-1.1/FL/Fl_Box.H
@@ -172,6 +181,7 @@ src/CMakeFiles/ifd.dir/patch.cpp.o
  local/include/autolab-rapi-0.1/RapiCore
  local/include/autolab-rapi-0.1/analogsensorarray.h
  local/include/autolab-rapi-0.1/binarysensorarray.h
+ local/include/autolab-rapi-0.1/blobfinder.h
  local/include/autolab-rapi-0.1/conversions.h
  local/include/autolab-rapi-0.1/datalogger.h
  local/include/autolab-rapi-0.1/dataupdateobserver.h
@@ -206,6 +216,7 @@ src/CMakeFiles/ifd.dir/patch.cpp.o
  local/include/autolab-rapi-0.1/velocity2d.h
  local/include/autolab-rapi-0.1/waypoint2d.h
  local/include/autolab-rapi-stage-0.1/RapiLooseStage
+ local/include/autolab-rapi-stage-0.1/loosestageblobfinder.h
  local/include/autolab-rapi-stage-0.1/loosestagedrivetrain2dof.h
  local/include/autolab-rapi-stage-0.1/loosestagefiducialfinder.h
  local/include/autolab-rapi-stage-0.1/loosestagelaser.h
@@ -214,6 +225,7 @@ src/CMakeFiles/ifd.dir/patch.cpp.o
  local/include/autolab-rapi-stage-0.1/loosestagerobot.h
  local/include/autolab-rapi-stage-0.1/loosestagesonar.h
  local/include/autolab-rapi-stage-0.1/loosestagetextdisplay.h
+ local/include/autolab-rapi-stage-0.1/stageblobfinder.h
  local/include/autolab-rapi-stage-0.1/stagedrivetrain2dof.h
  local/include/autolab-rapi-stage-0.1/stagefiducialfinder.h
  local/include/autolab-rapi-stage-0.1/stagelaser.h
@@ -227,6 +239,7 @@ src/CMakeFiles/ifd.dir/patchmanager.cpp.o
  /home/jwawerla/projects/ifd/src/patchinterface.h
  /home/jwawerla/projects/ifd/src/patchmanager.cpp
  /home/jwawerla/projects/ifd/src/patchmanager.h
+ /home/jwawerla/projects/ifd/src/robotctrlinterface.h
  /usr/include/fltk-1.1/FL/Enumerations.H
  /usr/include/fltk-1.1/FL/Fl.H
  /usr/include/fltk-1.1/FL/Fl_Box.H

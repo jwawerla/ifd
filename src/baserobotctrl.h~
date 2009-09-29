@@ -24,13 +24,15 @@
 #include "RapiLooseStage"
 #include "pathplannerlookup.h"
 #include "patchinterface.h"
+#include "robotctrlinterface.h"
 #include <list>
 #include <vector>
 
 using namespace Rapi;
 
 /** Type definition for FSM */
-typedef enum {START=0, SW_PATCH, FORAGE, NUM_STATES} tState;
+typedef enum {START = 0, SW_PATCH, FORAGE, CHOOSE_PATCH,
+              RETURN_TO_PATCH, NUM_STATES} tState;
 /** Type definition for action results */
 typedef enum {COMPLETED, IN_PROGRESS, FAILED } tActionResult;
 
@@ -38,7 +40,7 @@ typedef enum {COMPLETED, IN_PROGRESS, FAILED } tActionResult;
  * Base class for all robots
  * @author Jens Wawerla
  */
-class ABaseRobotCtrl : public ARobotCtrl
+class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
 {
   public:
     /**
@@ -51,22 +53,42 @@ class ABaseRobotCtrl : public ARobotCtrl
      * Update function called by the RAPI
      * @param dt size of time step [s]
      */
-    virtual void updateData(float dt);
+    virtual void updateData( float dt );
     /**
      * Adds a patch to the list of patches
      * @param patch to be added
      */
-    void addPatch(IPatch* patch);
+    void addPatch( IPatch* patch );
+    /**
+     * Gets the robots current pose
+     * @return pose
+     */
+    virtual CPose2d getPose() const;
 
   protected:
+    /**
+     * Checks in robot is currently in a corridor
+     * @return true if in corridor, false otherwise
+     */
+    inline bool inCorridor() {
+      if (( mLaser->mRangeData[0].range +
+            mLaser->mRangeData[mLaser->getNumSamples()-1].range ) < 2.7 )
+        return true;
+      return false;
+    };
+    /**
+     * Checks if the robot is within the patch
+     * @return true if in patch, false otherwise
+     */
+    bool inPatch() const;
     /** Current pose of robot */
     CPose2d mRobotPose;
     /** List of patches */
-    std::vector<IPatch*> mPatchList;
+    std::vector<IPatch*> mPatchVector;
     /** Flags if the state of the FSM has changed */
     bool mFgStateChanged;
     /** Current patch */
-    CPatch* mCurrentPatch;
+    IPatch* mCurrentPatch;
     /** State of FSM */
     tState mState;
     /** Elapsed time since the current state was entered [s] */
@@ -76,8 +98,6 @@ class ABaseRobotCtrl : public ARobotCtrl
   private:
     /** Previous state */
     tState mPrevState;
-    /** Nearness distance obstacle avoidance */
-    //CStageNd* mNd;
     /** Current waypoint */
     CWaypoint2d mCurrentWaypoint;
     /** Path planner */
@@ -88,10 +108,12 @@ class ABaseRobotCtrl : public ARobotCtrl
     CLooseStageDrivetrain2dof* mDrivetrain;
     /** Stage laser model */
     CLooseStageLaser* mLaser;
+    /** Stage blobfinder model */
+    CLooseStageBlobFinder* mBlobFinder;
     /** Stage power pack */
     CLooseStagePowerPack* mPowerPack;
     /** Stage fiducial model */
-    CLooseStageFiducialFinder* mFiducial;
+    //CLooseStageFiducialFinder* mFiducial;
     /** Text display */
     CLooseStageTextDisplay* mTextDisplay;
     /** General purpose counter */
@@ -116,6 +138,16 @@ class ABaseRobotCtrl : public ARobotCtrl
      * @return action result
      */
     tActionResult actionSelectPatch();
+    /**
+     * Action randomly forages for pucks in a given patch
+     * @retrun action result
+     */
+    tActionResult actionForage();
+    /**
+     * Action causes the robot to return to the current patch
+     * @return action result
+     */
+    tActionResult actionReturnToPatch();
     /**
      * Transfer waypoints to stages position device
      */

@@ -45,20 +45,12 @@ extern "C" int Init( Stg::Model* mod )
     // init general stuff
     ErrorInit( 10, false );
     initRandomNumberGenerator();
-
-    //patchList.push_back( new CPatch( CPose2d( 0, 26, 0 ), "A" ) );
-    //patchList.push_back( new CPatch( CPose2d( 17, 17, 0 ), "B" ) );
-    //patchList.push_back( new CPatch( CPose2d( 26,  0, 0 ), "C" ) );
-    //patchList.push_back( new CPatch( CPose2d( 17, -26, 0 ), "D" ) );
-    //patchList.push_back( new CPatch( CPose2d( 0, -26, 0 ), "E" ) );
-    //patchList.push_back( new CPatch( CPose2d( -17, -17, 0 ), "F" ) );
-
-
   }
   //************************************
   // create robot and its controller
   robot = new Rapi::CLooseStageRobot( mod );
   robotCtrl = new ABaseRobotCtrl( robot );
+  manager->registerRobotCtrl( robotCtrl );
 
   for ( unsigned int i = 0; i < manager->getNumPatches(); i++ )
     robotCtrl->addPatch( manager->getPatch(i) );

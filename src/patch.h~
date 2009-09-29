@@ -25,6 +25,7 @@
 #include "pose2d.h"
 #include "patchinterface.h"
 #include "patchmanager.h"
+#include <list>
 
 using namespace Rapi;
 
@@ -56,7 +57,12 @@ class CPatch : public IPatch
      * @return pose
      */
     CPose2d getPose() const;
-
+    /**
+     * Gets the radius of a patch
+     * @return [m]
+     */
+    float getRadius() const;
+    
   protected:
     /** Type definition for pucks */
     typedef struct {
@@ -85,8 +91,14 @@ class CPatch : public IPatch
 
 
   private:
+    /** Minimum Spacing between any puck and a newly placed puck [m] */
+    const float MIN_PUCK_PUCK_SPACING;
+    /** Minimum Spacing between any robot and a newly placed puck [m] */
+    const float MIN_PUCK_ROBOT_SPACING;
     /** Stage model */
     Stg::Model* mStgModel;
+    /** Central patch manager */
+    CPatchManager* mPatchManager;
     /** Pose of patch */
     CPose2d mPose;
     /** Puck renewal rate [1/s] */
@@ -96,7 +108,7 @@ class CPatch : public IPatch
     /** List of pucks */
     std::vector<tPuck> mPuckList;
     /** List of free pucks, that is pucks not currently in the patch */
-    std::vector<tPuck> mFreePuckList;
+    std::list<tPuck> mFreePuckList;
     /** Name of patch */
     std::string mName;
     /** Radius of patch [m] */
