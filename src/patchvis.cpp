@@ -18,32 +18,48 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  **************************************************************************/
-#ifndef IROBOTCTRL_H
-#define IROBOTCTRL_H
+#include "patchvis.h"
 
-#include "pose2d.h"
 
-/**
- * Interface to the robot control used by the patch to get the position of the
- * robot and avoid placing puck on top of robots during renewal
- * @author Jens Wawerla (jwawerla@sfu.ca)
- */
-class IRobotCtrl
+
+//-----------------------------------------------------------------------------
+CPatchVis::CPatchVis( float radius )
+    : Visualizer( "Patch", "show_patch" )
 {
-  public:
-    /** Default destructor */
-    virtual ~IRobotCtrl() {};
-    /**
-     * Gets the robots current pose
-     * @return pose
-     */
-    virtual CPose2d getPose() const = 0;
+  mRadius = radius;
+}
+//-----------------------------------------------------------------------------
+CPatchVis::~CPatchVis()
+{
+}
+//-----------------------------------------------------------------------------
+void CPatchVis::Visualize( Stg::Model* mod, Stg::Camera* cam )
+{
+  Stg::Pose pose;
 
+  // push the current patch-centered coordinate frame on the stack
+  glPushMatrix();
+  // go into global coordinates
+  Stg::Gl::pose_inverse_shift ( mod->GetGlobalPose() );
 
-  protected:
-    /** Default constructor */
-    IRobotCtrl() {};
+  pose = mod->GetPose();
 
-};
+  mod->PushColor( 1, 0.5, 0, 0.8 );
+  drawCircle( pose.x, pose.y, pose.z, mRadius, 20 );
+  mod->PopColor();
 
-#endif
+  glPopMatrix(); // back to patch coords
+
+}
+//-----------------------------------------------------------------------------
+void CPatchVis::drawCircle( float x, float y, float z, float radius, float steps )
+{
+  glBegin( GL_LINE_LOOP );
+  for ( float a = 0;  a < 2.0*M_PI; a += 2.0 * M_PI / steps )
+    glVertex3f( x + radius * sin( a ),
+                y + radius * cos( a ),
+                z );
+  glEnd();
+}
+//-----------------------------------------------------------------------------
+

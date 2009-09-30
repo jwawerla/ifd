@@ -67,6 +67,12 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
 
   protected:
     /**
+     * Checks if the robot is making progress moving around, or if it is stuck
+     * in some behavioural loop
+     * @return true if making progress, false if stuck
+     */
+    bool isMakingProgress();
+    /**
      * Checks in robot is currently in a corridor
      * @return true if in corridor, false otherwise
      */
@@ -104,6 +110,8 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
     CPathPlannerLookup* mPathPlanner;
     /** List of way points */
     std::list<CWaypoint2d> mWaypointList;
+    /** Stage gripper model */
+    Stg::ModelGripper* mGripper;
     /** Stage position model */
     CLooseStageDrivetrain2dof* mDrivetrain;
     /** Stage laser model */
@@ -128,6 +136,12 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
     std::string mFsmText[NUM_STATES];
     /** String for status messages */
     std::string mStatusStr;
+    /** Robot pose to measure progress */
+    CPose2d mRobotProgressPose;
+    /** Timer for measuring progress */
+    CTimer* mProgressTimer;
+    /** Flags if we make progress or not */
+    bool mFgProgress;
     /**
      * Action drives the robot along the waypoint list
      * @return action result
@@ -158,6 +172,7 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
      *         to be avoided
      */
     bool obstacleAvoid();
+
 };
 
 #endif

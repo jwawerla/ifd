@@ -1,7 +1,7 @@
 define patch model
 (
   color "orange"
-  size [ 2 2 0.02 ]
+  size [ 2 2 0.00 ]
 
   gui_nose 0
   gui_grid 0

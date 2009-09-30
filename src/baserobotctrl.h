@@ -32,7 +32,7 @@ using namespace Rapi;
 
 /** Type definition for FSM */
 typedef enum {START = 0, SW_PATCH, FORAGE, CHOOSE_PATCH,
-              RETURN_TO_PATCH, NUM_STATES} tState;
+              ROTATE90, NUM_STATES} tState;
 /** Type definition for action results */
 typedef enum {COMPLETED, IN_PROGRESS, FAILED } tActionResult;
 
@@ -66,6 +66,12 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
     virtual CPose2d getPose() const;
 
   protected:
+    /**
+     * Checks if the robot is making progress moving around, or if it is stuck
+     * in some behavioural loop
+     * @return true if making progress, false if stuck
+     */
+    bool isMakingProgress();
     /**
      * Checks in robot is currently in a corridor
      * @return true if in corridor, false otherwise
@@ -130,6 +136,14 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
     std::string mFsmText[NUM_STATES];
     /** String for status messages */
     std::string mStatusStr;
+    /** Robot pose to measure progress */
+    CPose2d mRobotProgressPose;
+    /** Timer for measuring progress */
+    CTimer* mProgressTimer;
+    /** Flags if we make progress or not */
+    bool mFgProgress;
+    /** Heading for rotatign 90 deg [rad] */
+    float mHeading;
     /**
      * Action drives the robot along the waypoint list
      * @return action result
@@ -146,10 +160,10 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
      */
     tActionResult actionForage();
     /**
-     * Action causes the robot to return to the current patch
+     * Action causes the robot to rotate 90 deg
      * @return action result
      */
-    tActionResult actionReturnToPatch();
+    tActionResult actionRotate90();
     /**
      * Transfer waypoints to stages position device
      */
@@ -160,6 +174,7 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
      *         to be avoided
      */
     bool obstacleAvoid();
+
 };
 
 #endif

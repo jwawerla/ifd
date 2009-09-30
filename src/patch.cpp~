@@ -19,6 +19,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  **************************************************************************/
 #include "patch.h"
+#include "patchvis.h"
 #include <assert.h>
 
 
@@ -29,6 +30,7 @@ int stgUpdate( Stg::Model* mod, CPatch* patch )
   return 0; // ok
 }
 //-----------------------------------------------------------------------------
+/*
 CPatch::CPatch( CPose2d pose, std::string name ) : IPatch(),
     MIN_PUCK_PUCK_SPACING( 0.6 ),
     MIN_PUCK_ROBOT_SPACING( 1.5 )
@@ -41,12 +43,14 @@ CPatch::CPatch( CPose2d pose, std::string name ) : IPatch(),
 
   mPatchManager->registerPatch( this );
 }
+*/
 //-----------------------------------------------------------------------------
 CPatch::CPatch( Stg::Model* mod ) : IPatch(),
     MIN_PUCK_PUCK_SPACING( 0.6 ),
     MIN_PUCK_ROBOT_SPACING( 3.5 )
 {
   Stg::Pose pose;
+  int tmpInt;
 
   assert( mod );
   mPatchManager = CPatchManager::getInstance( mod->GetWorld() );
@@ -56,7 +60,7 @@ CPatch::CPatch( Stg::Model* mod ) : IPatch(),
   mPose.mX = pose.x;
   mPose.mY = pose.y;
 
-  mLastPuckPlacedTimestamp = 0;
+  mLastPuckPlacedTimestamp = 0.0;
   mName = mStgModel->Token();
   mStgModel->AddUpdateCallback(( Stg::stg_model_callback_t ) stgUpdate, this );
   mStgModel->Subscribe();
@@ -73,7 +77,19 @@ CPatch::CPatch( Stg::Model* mod ) : IPatch(),
     PRT_WARN1( "Radius not found %s\n",
                mStgModel->Token() );
 
+  if ( !  mStgModel->GetPropertyInt( "init_empty", &tmpInt, 1 ) )
+    PRT_WARN1( "Init empty flag  not found %s\n",
+               mStgModel->Token() );
+  mFgInitEmpty = tmpInt;
+
+// mStgModel->Init();
   createPucks();
+  mFgFirstRun = true;
+
+  mPuckRate = 0.000000001;
+ 
+
+  //mod->AddVisualizer( new CPatchVis( mRadius ), true );
 }
 //-----------------------------------------------------------------------------
 CPatch::~CPatch()
@@ -83,7 +99,7 @@ CPatch::~CPatch()
 //-----------------------------------------------------------------------------
 void CPatch::createPucks()
 {
-  Stg::Pose pose;
+
   char name[25];
   tPuck puck;
   Stg::Color color( 0, 0, 1 );
@@ -99,21 +115,47 @@ void CPatch::createPucks()
     //puck.mod = world->CreateModel( NULL, "model" );
     assert( puck.mod );
     geom = puck.mod->GetGeom();
-    geom.size.x = 0.2;
-    geom.size.y = 0.2;
+    geom.size.x = 0.1;
+    geom.size.y = 0.1;
     geom.size.z = 0.4;
     puck.mod->SetGeom( geom );
-    pose = puck.mod->GetPose();
-    pose.x = 30 - mPose.mX;
-    pose.y = 30 - mPose.mY;
-    puck.mod->vis.gripper_return = true;
-    puck.mod->SetPose( pose );
+    puck.mod->SetGuiNose( 0 );
+    puck.mod->SetGuiMove( 1 );
+    puck.mod->SetGuiOutline( 0 );
+    puck.mod->SetGuiGrid( 0 );
+    puck.mod->SetFiducialReturn( 0 );
+    puck.mod->SetLaserReturn( Stg::LaserVisible );
+    puck.mod->SetGripperReturn( 1 );
+    puck.mod->SetObstacleReturn( 1 );
+    puck.mod->SetRangerReturn( 0 );
+    setPuckPose( puck.mod, Stg::Pose( 30.0, 30.0, -1.0, 0.0 ) );
     puck.mod->SetColor( color );
     snprintf( name, 25, "puck_%s_%d", mName.c_str(), i );
     puck.mod->SetToken( name );
     puck.mod->SetGuiMove( true );
-    mFreePuckList.push_back( puck );
-    mPuckList.push_back( puck );
+    mPuckVector.push_back( puck );
+    //puck.mod->Init();
+    if ( mFgInitEmpty ) {
+      mFreePuckList.push_back( puck );
+    }
+    else {
+      placePuck( &puck );
+    }
+
+  }
+}
+//-----------------------------------------------------------------------------
+void CPatch::setPuckPose( Stg::Model* mod, Stg::Pose pose )
+{
+  Stg::Pose stgPose;
+
+  if ( mod ) {
+
+    stgPose = mod->GetPose();
+    stgPose.x = pose.x - mPose.mX;
+    stgPose.y = pose.y - mPose.mY;
+    stgPose.z = pose.z;
+    mod->SetPose( stgPose );
   }
 }
 //-----------------------------------------------------------------------------
@@ -121,15 +163,21 @@ void CPatch::update()
 {
   float dt;
 
-  dt = mStgModel->GetWorld()->SimTimeNow() - mLastPuckPlacedTimestamp;
+  if (mFgFirstRun) {
+    mFgFirstRun = false;
+  }
+
+  dt = ( mStgModel->GetWorld()->SimTimeNow() * 1e-6 ) - mLastPuckPlacedTimestamp;
 
   if ( dt >= 1.0 / mPuckRate ) {
     if ( mFreePuckList.size() > 0 ) {
       placePuck( &mFreePuckList.front() );
       mFreePuckList.pop_front();
-      mLastPuckPlacedTimestamp = mStgModel->GetWorld()->SimTimeNow();
+      mLastPuckPlacedTimestamp = mStgModel->GetWorld()->SimTimeNow() * 1e-6;
     }
   }
+
+  printf("freeList %d \n", mFreePuckList.size());
 }
 //-----------------------------------------------------------------------------
 bool CPatch::isPuckIn( CPose2d pose, float radius )
@@ -137,8 +185,8 @@ bool CPatch::isPuckIn( CPose2d pose, float radius )
   Stg::Pose stgPose;
   CPose2d p;
 
-  for ( unsigned int i = 0; i < mPuckList.size(); i++ ) {
-    stgPose = mPuckList[i].mod->GetPose();
+  for ( unsigned int i = 0; i < mPuckVector.size(); i++ ) {
+    stgPose = mPuckVector[i].mod->GetPose();
     p.mX = stgPose.x;
     p.mY = stgPose.y;
     p.mYaw = stgPose.a;
@@ -160,12 +208,13 @@ void CPatch::placePuck( tPuck* puck )
     x =  randNo( -mRadius, mRadius );
     y =  randNo( -mRadius, mRadius );
     timeoutCount++;
-    if (timeoutCount > 100) {
-      PRT_ERR1("Failed to place pucks in patch %s", mName.c_str() );
+    if ( timeoutCount > 100 ) {
+      PRT_ERR1( "Failed to place pucks in patch %s", mName.c_str() );
       return;
     }
   }
-  while ( isPuckIn( CPose2d( x, y, 0.0 ), MIN_PUCK_PUCK_SPACING ) ||
+  while ( sqrt( x*x + y*y ) > mRadius ||
+          isPuckIn( CPose2d( x, y, 0.0 ), MIN_PUCK_PUCK_SPACING ) ||
           mPatchManager->isRobotIn( CPose2d( mPose.mX + x, mPose.mY + y, 0.0 ),
                                     MIN_PUCK_ROBOT_SPACING ) );
 
@@ -185,5 +234,19 @@ float CPatch::getRadius() const
   return mRadius;
 }
 //-----------------------------------------------------------------------------
+void CPatch::puckConsumed( Stg::Model* puck )
+{
+  if ( puck == NULL )
+    return;
 
+  setPuckPose( puck, Stg::Pose( 0.0, 0.0, -1.0, 0.0 ) );
+
+  for ( unsigned int i = 0; i < mPuckVector.size(); i++ ) {
+    if ( puck == mPuckVector[i].mod ) {
+      mFreePuckList.push_back( mPuckVector[i] );
+      break;
+    }
+  }
+}
+//-----------------------------------------------------------------------------
 

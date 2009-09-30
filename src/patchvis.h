@@ -18,32 +18,40 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  **************************************************************************/
-#ifndef IROBOTCTRL_H
-#define IROBOTCTRL_H
+#ifndef STGPATCHVIS_H
+#define STGPATCHVIS_H
 
-#include "pose2d.h"
+#include <stage.hh>
+
 
 /**
- * Interface to the robot control used by the patch to get the position of the
- * robot and avoid placing puck on top of robots during renewal
- * @author Jens Wawerla (jwawerla@sfu.ca)
+ * Visualizes patches
+ * @author Jens Wawerla <jwawerla@sfu.ca>
  */
-class IRobotCtrl
+class CPatchVis : public Stg::Visualizer
 {
   public:
+    /** Default constructor */
+    CPatchVis( float radius );
     /** Default destructor */
-    virtual ~IRobotCtrl() {};
-    /**
-     * Gets the robots current pose
-     * @return pose
-     */
-    virtual CPose2d getPose() const = 0;
+    ~CPatchVis();
 
+    virtual void Visualize( Stg::Model* displaymod, Stg::Camera* cam );
 
   protected:
-    /** Default constructor */
-    IRobotCtrl() {};
+    /**
+     * Draws a circle
+     * @param x center of circle
+     * @param y center of circle
+     * @param z center of circle
+     * @param radius of circle
+     * @param steps of discretization
+    */
+    void drawCircle( float x, float y, float z, float radius, float steps );
 
+  private:
+    /** Radius of patch [m] */
+    float mRadius;
 };
 
 #endif

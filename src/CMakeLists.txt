@@ -16,6 +16,7 @@ ADD_LIBRARY(ifd MODULE
 
 ADD_LIBRARY(patchCtrl MODULE
   patchCtrl.cpp
+  patchvis.cpp
   patch.cpp
   patchmanager.cpp
 )

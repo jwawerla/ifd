@@ -44,7 +44,7 @@ class CPatch : public IPatch
      * @param pose of patch
      * @param name of patch
      */
-    CPatch( CPose2d pose, std::string name );
+    //CPatch( CPose2d pose, std::string name );
     /**
      * Constructs a patch from a Stage model
      * @param mod stage model
@@ -64,14 +64,22 @@ class CPatch : public IPatch
     float getRadius() const;
     /**
      * Removes a puck from a patch, because it was consumed by a forager
-     *
+     * @param puck to be removed
+     */
     void puckConsumed(Stg::Model* puck);
-    
+
   protected:
     /** Type definition for pucks */
     typedef struct {
       Stg::Model* mod;
     } tPuck;
+
+    /**
+     * Sets the pose of a puck
+     * @param mod Stage model of a puck
+     * @param pose to be set
+     */
+    void setPuckPose(Stg::Model* mod, Stg::Pose pose);
     /**
      * Updates the patch
      */
@@ -110,7 +118,7 @@ class CPatch : public IPatch
     /** Upper puck limit */
     int mMaxPucks;
     /** List of pucks */
-    std::vector<tPuck> mPuckList;
+    std::vector<tPuck> mPuckVector;
     /** List of free pucks, that is pucks not currently in the patch */
     std::list<tPuck> mFreePuckList;
     /** Name of patch */
@@ -119,6 +127,10 @@ class CPatch : public IPatch
     float mRadius;
     /** Time stamp when the last puck was placed */
     float mLastPuckPlacedTimestamp;
+    /** Flags if the patch is initially empty or not */
+    bool mFgInitEmpty;
+    /** Flags if this is the first time the update function is called */
+    bool mFgFirstRun;
 };
 
 #endif

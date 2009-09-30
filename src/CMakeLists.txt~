@@ -21,7 +21,6 @@ ADD_LIBRARY(patchCtrl MODULE
 )
 
 ADD_LIBRARY(patchManagerCtrl MODULE
-  patchCtrl.cpp
   patch.cpp
   patchmanagerctrl.cpp
   patchmanager.cpp

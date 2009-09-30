@@ -46,6 +46,11 @@ class IPatch
      * @return [m]
      */
     virtual float getRadius() const = 0;
+    /**
+     * Removes a puck from a patch, because it was consumed by a forager
+     * @param puck to be removed
+     */
+    virtual void puckConsumed(Stg::Model* puck) = 0;
 
   protected:
     /** Default constructor */

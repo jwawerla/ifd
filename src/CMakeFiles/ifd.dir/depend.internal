@@ -8,20 +8,6 @@ src/CMakeFiles/ifd.dir/baserobotctrl.cpp.o
  /home/jwawerla/projects/ifd/src/patchinterface.h
  /home/jwawerla/projects/ifd/src/pathplannerlookup.h
  /home/jwawerla/projects/ifd/src/robotctrlinterface.h
- /usr/include/fltk-1.1/FL/Enumerations.H
- /usr/include/fltk-1.1/FL/Fl.H
- /usr/include/fltk-1.1/FL/Fl_Box.H
- /usr/include/fltk-1.1/FL/Fl_Export.H
- /usr/include/fltk-1.1/FL/Fl_Gl_Window.H
- /usr/include/fltk-1.1/FL/Fl_Group.H
- /usr/include/fltk-1.1/FL/Fl_Image.H
- /usr/include/fltk-1.1/FL/Fl_Menu_.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Bar.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Item.H
- /usr/include/fltk-1.1/FL/Fl_Widget.H
- /usr/include/fltk-1.1/FL/Fl_Window.H
- /usr/include/fltk-1.1/FL/fl_draw.H
- /usr/include/fltk-1.1/FL/gl.h
  local/include/autolab-rapi-0.1/RapiCore
  local/include/autolab-rapi-0.1/analogsensorarray.h
  local/include/autolab-rapi-0.1/binarysensorarray.h
@@ -87,20 +73,6 @@ src/CMakeFiles/ifd.dir/main.cpp.o
  /home/jwawerla/projects/ifd/src/patchmanager.h
  /home/jwawerla/projects/ifd/src/pathplannerlookup.h
  /home/jwawerla/projects/ifd/src/robotctrlinterface.h
- /usr/include/fltk-1.1/FL/Enumerations.H
- /usr/include/fltk-1.1/FL/Fl.H
- /usr/include/fltk-1.1/FL/Fl_Box.H
- /usr/include/fltk-1.1/FL/Fl_Export.H
- /usr/include/fltk-1.1/FL/Fl_Gl_Window.H
- /usr/include/fltk-1.1/FL/Fl_Group.H
- /usr/include/fltk-1.1/FL/Fl_Image.H
- /usr/include/fltk-1.1/FL/Fl_Menu_.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Bar.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Item.H
- /usr/include/fltk-1.1/FL/Fl_Widget.H
- /usr/include/fltk-1.1/FL/Fl_Window.H
- /usr/include/fltk-1.1/FL/fl_draw.H
- /usr/include/fltk-1.1/FL/gl.h
  local/include/autolab-rapi-0.1/RapiCore
  local/include/autolab-rapi-0.1/analogsensorarray.h
  local/include/autolab-rapi-0.1/binarysensorarray.h
@@ -163,21 +135,8 @@ src/CMakeFiles/ifd.dir/patch.cpp.o
  /home/jwawerla/projects/ifd/src/patch.h
  /home/jwawerla/projects/ifd/src/patchinterface.h
  /home/jwawerla/projects/ifd/src/patchmanager.h
+ /home/jwawerla/projects/ifd/src/patchvis.h
  /home/jwawerla/projects/ifd/src/robotctrlinterface.h
- /usr/include/fltk-1.1/FL/Enumerations.H
- /usr/include/fltk-1.1/FL/Fl.H
- /usr/include/fltk-1.1/FL/Fl_Box.H
- /usr/include/fltk-1.1/FL/Fl_Export.H
- /usr/include/fltk-1.1/FL/Fl_Gl_Window.H
- /usr/include/fltk-1.1/FL/Fl_Group.H
- /usr/include/fltk-1.1/FL/Fl_Image.H
- /usr/include/fltk-1.1/FL/Fl_Menu_.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Bar.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Item.H
- /usr/include/fltk-1.1/FL/Fl_Widget.H
- /usr/include/fltk-1.1/FL/Fl_Window.H
- /usr/include/fltk-1.1/FL/fl_draw.H
- /usr/include/fltk-1.1/FL/gl.h
  local/include/autolab-rapi-0.1/RapiCore
  local/include/autolab-rapi-0.1/analogsensorarray.h
  local/include/autolab-rapi-0.1/binarysensorarray.h
@@ -240,20 +199,6 @@ src/CMakeFiles/ifd.dir/patchmanager.cpp.o
  /home/jwawerla/projects/ifd/src/patchmanager.cpp
  /home/jwawerla/projects/ifd/src/patchmanager.h
  /home/jwawerla/projects/ifd/src/robotctrlinterface.h
- /usr/include/fltk-1.1/FL/Enumerations.H
- /usr/include/fltk-1.1/FL/Fl.H
- /usr/include/fltk-1.1/FL/Fl_Box.H
- /usr/include/fltk-1.1/FL/Fl_Export.H
- /usr/include/fltk-1.1/FL/Fl_Gl_Window.H
- /usr/include/fltk-1.1/FL/Fl_Group.H
- /usr/include/fltk-1.1/FL/Fl_Image.H
- /usr/include/fltk-1.1/FL/Fl_Menu_.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Bar.H
- /usr/include/fltk-1.1/FL/Fl_Menu_Item.H
- /usr/include/fltk-1.1/FL/Fl_Widget.H
- /usr/include/fltk-1.1/FL/Fl_Window.H
- /usr/include/fltk-1.1/FL/fl_draw.H
- /usr/include/fltk-1.1/FL/gl.h
  local/include/autolab-rapi-0.1/point2d.h
  local/include/autolab-rapi-0.1/pose2d.h
  local/include/autolab-rapi-0.1/rapivarinterface.h

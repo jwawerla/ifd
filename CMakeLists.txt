@@ -44,13 +44,6 @@ ELSE (RAPI_GUI_FOUND)
   MESSAGE(STATUS "autolab-rapi-gui not detected")
 ENDIF (RAPI_GUI_FOUND)
 
-PKG_SEARCH_MODULE( ND REQUIRED autolab-nd )
-
-IF (ND_FOUND)
-  MESSAGE(STATUS "autolab-nd version ${ND_VERSION} detected at ${ND_PREFIX}" )
-ELSE (ND_FOUND)
-  MESSAGE(STATUS "autolab-nd not detected")
-ENDIF (ND_FOUND)
 
 FIND_PACKAGE(Qt4 REQUIRED)
 IF (QT_FOUND)
@@ -63,7 +56,6 @@ ENDIF(QT_FOUND)
 INCLUDE_DIRECTORIES( ./src
                      ${RAPI_INCLUDE_DIRS}
                      ${RAPI_GUI_INCLUDE_DIRS}
-                     ${ND_INCLUDE_DIRS}
                      ${STAGE_INCLUDE_DIRS}
                      ${QT_INCLUDE_DIR}
 )
@@ -71,7 +63,6 @@ INCLUDE_DIRECTORIES( ./src
 LINK_DIRECTORIES( ${STAGE_LIBRARY_DIRS}
                   ${RAPI_LIBRARY_DIRS}
                   ${RAPI_GUI_LIBRARY_DIRS}
-                  ${ND_LIBRARY_DIRS}
                   ${QT_LIBRARY_DIR}
 )
 

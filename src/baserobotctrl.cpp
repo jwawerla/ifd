@@ -23,10 +23,10 @@
 
 const double CRUISE_SPEED = 0.4;
 const double AVOID_SPEED = 0.05;
-const double AVOID_TURN = 0.5;
+const double AVOID_TURN = 0.75;
 const double MIN_FRONT_DISTANCE = 0.6;
 const double STOP_DISTANCE = 0.5;
-const int AVOID_DURATION = 10;
+const int AVOID_DURATION = 10; // 10
 
 //-----------------------------------------------------------------------------
 ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
@@ -42,6 +42,8 @@ ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
   mReplanCounter = 0;
   mCounter = 0;
   mPatchVector.clear();
+  mFgProgress = true;
+  mProgressTimer = new CTimer( mRobot );
 
   //************************************
   // FSM
@@ -49,7 +51,7 @@ ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
   mFsmText[SW_PATCH]        = "switch patch";
   mFsmText[FORAGE]          = "forage";
   mFsmText[CHOOSE_PATCH]    = "choose";
-  mFsmText[RETURN_TO_PATCH] = "return";
+  mFsmText[ROTATE90]        = "rotate90";
 
   // init path planer
   mPathPlanner = new CPathPlannerLookup( "circle.pts", "circle.fw",
@@ -136,10 +138,29 @@ bool ABaseRobotCtrl::inPatch() const
 {
   if ( mCurrentPatch ) {
     if ( mRobotPose.distance( mCurrentPatch->getPose() ) <
-         mCurrentPatch->getRadius() + 2.0 )
+         mCurrentPatch->getRadius() - 0.2  )
       return true;
   }
   return false;
+}
+//-----------------------------------------------------------------------------
+bool ABaseRobotCtrl::isMakingProgress()
+{
+  if ( mFgStateChanged ) {
+    mFgProgress = true;
+    mRobotProgressPose = mRobotPose;
+    mProgressTimer->start();
+  }
+
+  if ( mProgressTimer->getElapsedTime() > 60.0 ) {
+    if ( mRobotPose.distance( mRobotProgressPose ) > 0.2 )
+      mFgProgress = true;
+    else
+      mFgProgress = false;
+    mRobotProgressPose = mRobotPose;
+    mProgressTimer->start();
+  }
+  return mFgProgress;
 }
 //-----------------------------------------------------------------------------
 bool ABaseRobotCtrl::obstacleAvoid()
@@ -190,6 +211,7 @@ bool ABaseRobotCtrl::obstacleAvoid()
     }
     mAvoidCount--;
 
+    //rprintf("avoiding obstacles \n");
     return true; // busy avoding obstacles
   }
   return false; // didn't have to avoid anything
@@ -253,7 +275,7 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
 //-----------------------------------------------------------------------------
 tActionResult ABaseRobotCtrl::actionForage()
 {
-  Stg::Model* puck;
+  Stg::Model* puck = NULL;
   bool fgCloseToPuck = false;
   unsigned int center;
   float turnRate;
@@ -263,14 +285,14 @@ tActionResult ABaseRobotCtrl::actionForage()
     center = ( mBlobFinder->mBlobData[0].right +
                mBlobFinder->mBlobData[0].left ) / 2;
     turnRate = ( center - ( mBlobFinder->getScanWidth() / 2.0 ) ) / -200.0;
-    printf( "turnRate %f %d %d \n", R2D( turnRate ), mBlobFinder->getScanWidth(), center );
-    if ( mBlobFinder->mBlobData[0].range < 0.75 )
+    //printf( "turnRate %f %d %d %f \n", R2D( turnRate ), mBlobFinder->getScanWidth(), center, mBlobFinder->mBlobData[0].range );
+    if ( mBlobFinder->mBlobData[0].range < 0.85 )
       fgCloseToPuck = true;
 
     if ( fabs( turnRate ) < 0.05 )
       speed = 0.3;
     else
-      speed = 0.05;
+      speed = 0.0; //0.05;
     mDrivetrain->setVelocityCmd( speed, turnRate );
 
     if ( mGripper->GetConfig().beam[0] )
@@ -278,29 +300,42 @@ tActionResult ABaseRobotCtrl::actionForage()
     if ( mGripper->GetConfig().beam[1] )
       puck = mGripper->GetConfig().beam[1];
 
+    if ( puck )
+      mCurrentPatch->puckConsumed( puck );
   }
   else {
     // nothing in view, go straight
     mDrivetrain->setVelocityCmd( CRUISE_SPEED, 0.0 );
   }
 
-  if ( not fgCloseToPuck )
+  if ( not fgCloseToPuck ) {
     obstacleAvoid();
+  }
+
+  if ( mDrivetrain->isStalled() )
+    mDrivetrain->setVelocityCmd( -0.1, 0.0 );
 
   return IN_PROGRESS;
 }
 //-----------------------------------------------------------------------------
-tActionResult ABaseRobotCtrl::actionReturnToPatch()
+tActionResult ABaseRobotCtrl::actionRotate90()
 {
   float angle;
 
-  angle = atan2( mCurrentWaypoint.getPose().mY - mRobotPose.mY,
-                 mCurrentWaypoint.getPose().mX - mRobotPose.mX );
-  angle = normalizeAngle( angle - mRobotPose.mYaw );
-  mDrivetrain->setTranslationalVelocityCmd( fabs( CRUISE_SPEED * cos( angle ) ) );
-  mDrivetrain->setRotationalVelocityCmd( angle );
+  if ( mFgStateChanged ) {
+    if ( drand48() < 0.5 )
+      angle = D2R( -90.0 );
+    else
+      angle = D2R( 90.0 );
+    mHeading = normalizeAngle( mRobotPose.mYaw + angle );
+  }
+  angle = normalizeAngle( mHeading - mRobotPose.mYaw );
+  if ( angle > 0 )
+    mDrivetrain->setVelocityCmd( 0.0, 0.75 );
+  else
+    mDrivetrain->setVelocityCmd( 0.0, -0.75 );
 
-  if ( inPatch() )
+  if ( fabs( angle ) < 0.05 )
     return COMPLETED;
 
   return IN_PROGRESS;
@@ -357,10 +392,12 @@ void ABaseRobotCtrl::updateData( float dt )
         mState = CHOOSE_PATCH;
       if ( not inPatch() )
         mState = SW_PATCH;
+      if ( not isMakingProgress() )
+        mState = ROTATE90;
       break;
 
-    case RETURN_TO_PATCH:
-      if ( actionReturnToPatch() == COMPLETED )
+    case ROTATE90:
+      if ( actionRotate90() == COMPLETED )
         mState = FORAGE;
       break;
 

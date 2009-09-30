@@ -8,10 +8,10 @@ include "sick.inc"
 include "patch.inc"
 
 speedup 10.000
-paused 1
+paused 0
 
 # time at which to pause (in GUI mode) or quit (in headless mode) the simulation
-quit_time 3600 # 1 hour of simulated time
+#quit_time 3600 # 1 hour of simulated time
 
 resolution 0.02
 
@@ -55,64 +55,64 @@ model
 # patches
 patch
 (
-  db_count 3
-  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
-  pose [ 0.000 26.000 0 0 ]
+  db_count 4
+  db [ "puck_rate<float>0.1" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
+  pose [ 0.37 24.72 0 0 ]
   name "patchA"
 )
 
 patch
 (
-  db_count 3
-  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
-  pose [ 17.000 17.000 0 0 ]
+  db_count 4
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
+  pose [ 17.77 16.86 0 0 ]
   name "patchB"
 )
 
 patch
 (
-  db_count 3
-  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
-  pose [ 26.000 0.000 0 0 ]
+  db_count 4
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
+  pose [ 24.68 -0.26 0 0 ]
   name "patchC"
 )
 
 patch
 (
-  db_count 3
-  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
-  pose [ 17.000 -17.000 0 0 ]
+  db_count 4
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
+  pose [ 17.41 -17.49 0 0 ]
   name "patchD"
 )
 
 patch
 (
-  db_count 3
-  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>6.0"]
-  pose [ 0.000 -26.000 0 0 ]
+  db_count 4
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
+  pose [ 0.28 -24.73 0 0 ]
   name "patchE"
 )
 
 patch
 (
-  db_count 3
-  db [ "puck_rate<float>0.01" "max_pucks<int>25" "radius<float>5.0"]
-  pose [ -17.000 -17.000 0 0 ]
+  db_count 4
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
+  pose [ -17.52 -17.84 0 0 ]
   name "patchF"
 )
 
 patch
 (
-  db_count 3
-  db [ "puck_rate<float>0.01" "max_pucks<int>50" "radius<float>5.0"]
-  pose [ -26.000 0.000 0 0 ]
+  db_count 4
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
+  pose [ -24.73 -0.27 0 0 ]
   name "patchG"
 )
 patch
 (
-  db_count 3
-  db [ "puck_rate<float>0.01" "max_pucks<int>50" "radius<float>5.0"]
-  pose [ -17.000 17.000 0 0 ]
+  db_count 4
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
+  pose [ -17.29 17.13 0 0 ]
   name "patchH"
 )
 
@@ -121,7 +121,7 @@ patch
 # Robots
 define autorob pioneer2dx
 (
- blobfinder(range 1.0)
+ blobfinder(range 1.0 )
  gripper(pose [0.2 0 -0.15 0])
  sicklaser( samples 32 range_max 5 laser_return 2 watts 30 )
  ctrl "ifd"

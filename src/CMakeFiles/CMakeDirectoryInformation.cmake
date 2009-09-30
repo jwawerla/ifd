@@ -17,9 +17,8 @@ SET(CMAKE_C_INCLUDE_PATH
   "local/include/autolab-rapi-stage-0.1"
   "local/include/autolab-rapi-0.1"
   "/home/jwawerla/local/stage-svn/include/Stage-3.2"
-  "/usr/include/fltk-1.1"
+  "/usr/include/freetype2"
   "local/include/autolab-rapi-gui-0.1"
-  "local/include/autolab-nd-0.1"
   )
 SET(CMAKE_CXX_INCLUDE_PATH ${CMAKE_C_INCLUDE_PATH})
 SET(CMAKE_Fortran_INCLUDE_PATH ${CMAKE_C_INCLUDE_PATH})

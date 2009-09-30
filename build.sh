@@ -39,6 +39,7 @@ echo -e ${RED}Reverting autolab-rapi to the correct version ${EC}
 echo -e ${RED}Installing autolab-rapi ${EC}
 cd ${DEPENDENS_SRC_DIR}/autolab-rapi
 cmake -DCMAKE_INSTALL_PREFIX=${DEPENDENS_INSTALL_DIR}
+make -j5
 make install
 
 ######################################
