@@ -144,6 +144,8 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
     bool mFgProgress;
     /** Heading for rotatign 90 deg [rad] */
     float mHeading;
+    /** Right front laser reading [m] */
+    float mRightFrontDistance;
     /**
      * Action drives the robot along the waypoint list
      * @return action result

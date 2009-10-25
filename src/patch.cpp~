@@ -22,6 +22,7 @@
 #include "patchvis.h"
 #include <assert.h>
 
+static unsigned int lastPuckId = 0;
 
 //-----------------------------------------------------------------------------
 int stgUpdate( Stg::Model* mod, CPatch* patch )
@@ -51,6 +52,8 @@ CPatch::CPatch( Stg::Model* mod ) : IPatch(),
 {
   Stg::Pose pose;
   int tmpInt;
+
+  id = id + 1;
 
   assert( mod );
   mPatchManager = CPatchManager::getInstance( mod->GetWorld() );
@@ -82,13 +85,12 @@ CPatch::CPatch( Stg::Model* mod ) : IPatch(),
                mStgModel->Token() );
   mFgInitEmpty = tmpInt;
 
-// mStgModel->Init();
-  createPucks();
   mFgFirstRun = true;
 
-  mPuckRate = 0.000000001;
- 
+  //mPuckRate = 0.000000001;
+  //mMaxPucks = 0;
 
+  createPucks();
   //mod->AddVisualizer( new CPatchVis( mRadius ), true );
 }
 //-----------------------------------------------------------------------------
@@ -102,23 +104,23 @@ void CPatch::createPucks()
 
   char name[25];
   tPuck puck;
+  Stg::Pose parentPose;
   Stg::Color color( 0, 0, 1 );
-  Stg::Geom geom;
   Stg::World* world;
   world = mStgModel->GetWorld();
   assert( world );
 
+  parentPose = mStgModel->GetPose();
   //PRT_MSG1( 4, "Generating %d pucks ", mMaxPucks );
-  //printf("Generating %d pucks \n", mMaxPucks);
+  printf("Generating %d pucks \n", mMaxPucks);
   for ( int i = 0; i < mMaxPucks; i++ ) {
-    puck.mod = world->CreateModel( mStgModel, "model" );
+    //puck.mod = world->CreateModel( mStgModel, "model" );
     //puck.mod = world->CreateModel( NULL, "model" );
+    sprintf(name, "%d", i + lastPuckId);
+    puck.mod = world->GetModel(name);
     assert( puck.mod );
-    geom = puck.mod->GetGeom();
-    geom.size.x = 0.1;
-    geom.size.y = 0.1;
-    geom.size.z = 0.4;
-    puck.mod->SetGeom( geom );
+    puck.mod->SetGeom( Stg::Geom( Stg::Pose(), Stg::Size(0.1, 0.1, 0.4) ) );
+    //puck.mod->SetParent( mStgModel );
     puck.mod->SetGuiNose( 0 );
     puck.mod->SetGuiMove( 1 );
     puck.mod->SetGuiOutline( 0 );
@@ -128,35 +130,21 @@ void CPatch::createPucks()
     puck.mod->SetGripperReturn( 1 );
     puck.mod->SetObstacleReturn( 1 );
     puck.mod->SetRangerReturn( 0 );
-    setPuckPose( puck.mod, Stg::Pose( 30.0, 30.0, -1.0, 0.0 ) );
+    puck.mod->SetPose( Stg::Pose( 30.0 + parentPose.x , 30.0 + parentPose.y, -1.0, 0.0 ) );
     puck.mod->SetColor( color );
     snprintf( name, 25, "puck_%s_%d", mName.c_str(), i );
     puck.mod->SetToken( name );
     puck.mod->SetGuiMove( true );
     mPuckVector.push_back( puck );
-    //puck.mod->Init();
+
     if ( mFgInitEmpty ) {
       mFreePuckList.push_back( puck );
     }
     else {
       placePuck( &puck );
     }
-
   }
-}
-//-----------------------------------------------------------------------------
-void CPatch::setPuckPose( Stg::Model* mod, Stg::Pose pose )
-{
-  Stg::Pose stgPose;
-
-  if ( mod ) {
-
-    stgPose = mod->GetPose();
-    stgPose.x = pose.x - mPose.mX;
-    stgPose.y = pose.y - mPose.mY;
-    stgPose.z = pose.z;
-    mod->SetPose( stgPose );
-  }
+  lastPuckId =+ mMaxPucks;
 }
 //-----------------------------------------------------------------------------
 void CPatch::update()
@@ -177,7 +165,6 @@ void CPatch::update()
     }
   }
 
-  printf("freeList %d \n", mFreePuckList.size());
 }
 //-----------------------------------------------------------------------------
 bool CPatch::isPuckIn( CPose2d pose, float radius )
@@ -199,11 +186,12 @@ bool CPatch::isPuckIn( CPose2d pose, float radius )
 //-----------------------------------------------------------------------------
 void CPatch::placePuck( tPuck* puck )
 {
+  Stg::Pose parentPose;
   int timeoutCount = 0;
-  Stg::Pose pose;
-  float x;
-  float y;
+  double x;
+  double y;
 
+  parentPose = mStgModel->GetPose();
   do {
     x =  randNo( -mRadius, mRadius );
     y =  randNo( -mRadius, mRadius );
@@ -218,10 +206,7 @@ void CPatch::placePuck( tPuck* puck )
           mPatchManager->isRobotIn( CPose2d( mPose.mX + x, mPose.mY + y, 0.0 ),
                                     MIN_PUCK_ROBOT_SPACING ) );
 
-  pose = puck->mod->GetPose();
-  pose.x = x;
-  pose.y = y;
-  puck->mod->SetPose( pose );
+  puck->mod->SetPose( Stg::Pose( x + parentPose.x, y + parentPose.y, 0.0, 0.0) );
 }
 //-----------------------------------------------------------------------------
 CPose2d CPatch::getPose() const
@@ -239,7 +224,7 @@ void CPatch::puckConsumed( Stg::Model* puck )
   if ( puck == NULL )
     return;
 
-  setPuckPose( puck, Stg::Pose( 0.0, 0.0, -1.0, 0.0 ) );
+  puck->SetPose( Stg::Pose( 0.0, 0.0, -1.0, 0.0 ) );
 
   for ( unsigned int i = 0; i < mPuckVector.size(); i++ ) {
     if ( puck == mPuckVector[i].mod ) {

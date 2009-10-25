@@ -2,7 +2,7 @@
 define sicklaser laser
 (
   # laser-specific properties
-  # factory settings for LMS200	
+  # factory settings for LMS200
   range_max 8.0
   fov 180.0
   samples 361
@@ -49,11 +49,11 @@ define fancysicklaser sicklaser
   # laser bit
   block( points 4
     point[0] [ -0.02 -0.05 ]
-	 point[1] [  0.06 -0.05 ]
-	 point[2] [  0.06  0.05 ]
-	 point[3] [ -0.02  0.05 ]
-	 z [0.02 0.12 ]  
-   color "gray10"
+    point[1] [  0.06 -0.05 ]
+    point[2] [  0.06  0.05 ]
+    point[3] [ -0.02  0.05 ]
+    z [0.02 0.12 ]
+    color "gray10"
   )
 )
 

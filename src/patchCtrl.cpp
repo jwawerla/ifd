@@ -21,10 +21,13 @@
 
 #include "RapiLooseStage"
 #include "patch.h"
+#include <assert.h>
 
 //-----------------------------------------------------------------------------
 extern "C" int Init( Stg::Model* mod )
 {
+
+  assert(mod);
 
   //************************************
   // init general stuff

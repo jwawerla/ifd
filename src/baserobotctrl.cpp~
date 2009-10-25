@@ -41,7 +41,8 @@ ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
   mAvoidCount = 0;
   mReplanCounter = 0;
   mCounter = 0;
-  mPatchVector.clear(); 
+  mRightFrontDistance = 0.0;
+  mPatchVector.clear();
   mFgProgress = true;
   mProgressTimer = new CTimer( mRobot );
 
@@ -138,7 +139,7 @@ bool ABaseRobotCtrl::inPatch() const
 {
   if ( mCurrentPatch ) {
     if ( mRobotPose.distance( mCurrentPatch->getPose() ) <
-         mCurrentPatch->getRadius() + 2.0 )
+         mCurrentPatch->getRadius() - 0.2  )
       return true;
   }
   return false;
@@ -219,6 +220,7 @@ bool ABaseRobotCtrl::obstacleAvoid()
 //-----------------------------------------------------------------------------
 tActionResult ABaseRobotCtrl::actionFollowWaypointList()
 {
+  float diffRightFrontDist;
   float angle;
   float rightFrontDist;
   bool fgRightWallFollow = false;
@@ -242,10 +244,13 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
   if ( not obstacleAvoid() ) {
 
     rightFrontDist = mLaser->mRangeData[mLaser->getNumSamples() / 4].range;
+    diffRightFrontDist = rightFrontDist - mRightFrontDistance;
+    mRightFrontDistance = rightFrontDist;
 
     // check if we are in a corridor
     if ( inCorridor() ) {
-      angle = D2R( -5000.0 * ( rightFrontDist - 0.8 ) );
+      angle = D2R( -500.0 * ( rightFrontDist - 0.8 ) - 60.0*diffRightFrontDist );
+      printf("%f  %f -> %f \n", rightFrontDist -0.8, diffRightFrontDist, R2D(angle));
       mDrivetrain->setRotationalVelocityCmd( angle );
       mDrivetrain->setTranslationalVelocityCmd( fabs( CRUISE_SPEED * cos( angle ) ) );
       fgRightWallFollow = true;
@@ -300,7 +305,7 @@ tActionResult ABaseRobotCtrl::actionForage()
     if ( mGripper->GetConfig().beam[1] )
       puck = mGripper->GetConfig().beam[1];
 
-    if (puck)
+    if ( puck )
       mCurrentPatch->puckConsumed( puck );
   }
   else {
@@ -313,7 +318,7 @@ tActionResult ABaseRobotCtrl::actionForage()
   }
 
   if ( mDrivetrain->isStalled() )
-    mDrivetrain->setVelocityCmd( -0.1, 0.0);
+    mDrivetrain->setVelocityCmd( -0.1, 0.0 );
 
   return IN_PROGRESS;
 }
@@ -322,20 +327,20 @@ tActionResult ABaseRobotCtrl::actionRotate90()
 {
   float angle;
 
-  if (mFgStateChanged) {
-    if (drand48() < 0.5)
-      angle = D2R(-90.0);
+  if ( mFgStateChanged ) {
+    if ( drand48() < 0.5 )
+      angle = D2R( -90.0 );
     else
-      angle = D2R(90.0);
-    mHeading = normalizeAngle( mRobotPose.mYaw + angle);
+      angle = D2R( 90.0 );
+    mHeading = normalizeAngle( mRobotPose.mYaw + angle );
   }
   angle = normalizeAngle( mHeading - mRobotPose.mYaw );
-  if (angle > 0)
+  if ( angle > 0 )
     mDrivetrain->setVelocityCmd( 0.0, 0.75 );
   else
     mDrivetrain->setVelocityCmd( 0.0, -0.75 );
 
-  if ( fabs(angle) < 0.05 )
+  if ( fabs( angle ) < 0.05 )
     return COMPLETED;
 
   return IN_PROGRESS;

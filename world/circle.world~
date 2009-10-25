@@ -8,7 +8,7 @@ include "sick.inc"
 include "patch.inc"
 
 speedup 10.000
-paused 0
+paused 1
 
 # time at which to pause (in GUI mode) or quit (in headless mode) the simulation
 #quit_time 3600 # 1 hour of simulated time
@@ -56,7 +56,7 @@ model
 patch
 (
   db_count 4
-  db [ "puck_rate<float>0.1" "max_pucks<int>50" "radius<float>7.75" "init_empty<int>0"]
+  db [ "puck_rate<float>0.1" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
   pose [ 0.37 24.72 0 0 ]
   name "patchA"
 )
@@ -64,7 +64,7 @@ patch
 patch
 (
   db_count 4
-  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.75" "init_empty<int>0"]
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
   pose [ 17.77 16.86 0 0 ]
   name "patchB"
 )
@@ -72,7 +72,7 @@ patch
 patch
 (
   db_count 4
-  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.75" "init_empty<int>0"]
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
   pose [ 24.68 -0.26 0 0 ]
   name "patchC"
 )
@@ -80,7 +80,7 @@ patch
 patch
 (
   db_count 4
-  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.75" "init_empty<int>0"]
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
   pose [ 17.41 -17.49 0 0 ]
   name "patchD"
 )
@@ -88,7 +88,7 @@ patch
 patch
 (
   db_count 4
-  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.75" "init_empty<int>0"]
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
   pose [ 0.28 -24.73 0 0 ]
   name "patchE"
 )
@@ -96,7 +96,7 @@ patch
 patch
 (
   db_count 4
-  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.75" "init_empty<int>0"]
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
   pose [ -17.52 -17.84 0 0 ]
   name "patchF"
 )
@@ -104,14 +104,14 @@ patch
 patch
 (
   db_count 4
-  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.75" "init_empty<int>0"]
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
   pose [ -24.73 -0.27 0 0 ]
   name "patchG"
 )
 patch
 (
   db_count 4
-  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.75" "init_empty<int>0"]
+  db [ "puck_rate<float>0.03" "max_pucks<int>50" "radius<float>7.25" "init_empty<int>0"]
   pose [ -17.29 17.13 0 0 ]
   name "patchH"
 )
@@ -154,4 +154,443 @@ autorob( pose [17.106 11.809 0 -95.589]   name "R01" )
 #autorob( pose [3.944 4.674 0 -103.060] )
 #autorob( pose [4.634 6.897 0 -103.060] )
 
+puck (name "1")
+puck (name "2")
+puck (name "3")
+puck (name "4")
+puck (name "5")
+puck (name "6")
+puck (name "7")
+puck (name "8")
+puck (name "9")
 
+puck (name "10")
+puck (name "11")
+puck (name "12")
+puck (name "13")
+puck (name "14")
+puck (name "15")
+puck (name "16")
+puck (name "17")
+puck (name "18")
+puck (name "19")
+
+puck (name "20")
+puck (name "21")
+puck (name "22")
+puck (name "23")
+puck (name "24")
+puck (name "25")
+puck (name "26")
+puck (name "27")
+puck (name "28")
+puck (name "29")
+
+puck (name "30")
+puck (name "31")
+puck (name "32")
+puck (name "33")
+puck (name "34")
+puck (name "35")
+puck (name "36")
+puck (name "37")
+puck (name "38")
+puck (name "39")
+
+puck (name "40")
+puck (name "41")
+puck (name "42")
+puck (name "43")
+puck (name "44")
+puck (name "45")
+puck (name "46")
+puck (name "47")
+puck (name "48")
+puck (name "49")
+
+puck (name "50")
+puck (name "51")
+puck (name "52")
+puck (name "53")
+puck (name "54")
+puck (name "55")
+puck (name "56")
+puck (name "57")
+puck (name "58")
+puck (name "59")
+
+puck (name "60")
+puck (name "61")
+puck (name "62")
+puck (name "63")
+puck (name "64")
+puck (name "65")
+puck (name "66")
+puck (name "67")
+puck (name "68")
+puck (name "69")
+
+puck (name "70")
+puck (name "71")
+puck (name "72")
+puck (name "73")
+puck (name "74")
+puck (name "75")
+puck (name "76")
+puck (name "77")
+puck (name "78")
+puck (name "79")
+
+puck (name "80")
+puck (name "81")
+puck (name "82")
+puck (name "83")
+puck (name "84")
+puck (name "85")
+puck (name "86")
+puck (name "87")
+puck (name "88")
+puck (name "89")
+
+puck (name "90")
+puck (name "91")
+puck (name "92")
+puck (name "93")
+puck (name "94")
+puck (name "95")
+puck (name "96")
+puck (name "97")
+puck (name "98")
+puck (name "99")
+
+puck (name "100")
+puck (name "101")
+puck (name "102")
+puck (name "103")
+puck (name "104")
+puck (name "105")
+puck (name "106")
+puck (name "107")
+puck (name "108")
+puck (name "109")
+
+puck (name "110")
+puck (name "111")
+puck (name "112")
+puck (name "113")
+puck (name "114")
+puck (name "115")
+puck (name "116")
+puck (name "117")
+puck (name "118")
+puck (name "119")
+
+puck (name "120")
+puck (name "121")
+puck (name "122")
+puck (name "123")
+puck (name "124")
+puck (name "125")
+puck (name "126")
+puck (name "127")
+puck (name "128")
+puck (name "129")
+
+puck (name "130")
+puck (name "131")
+puck (name "132")
+puck (name "133")
+puck (name "134")
+puck (name "135")
+puck (name "136")
+puck (name "137")
+puck (name "138")
+puck (name "139")
+
+puck (name "140")
+puck (name "141")
+puck (name "142")
+puck (name "143")
+puck (name "144")
+puck (name "145")
+puck (name "146")
+puck (name "147")
+puck (name "148")
+puck (name "149")
+
+puck (name "150")
+puck (name "151")
+puck (name "152")
+puck (name "153")
+puck (name "154")
+puck (name "155")
+puck (name "156")
+puck (name "157")
+puck (name "158")
+puck (name "159")
+
+puck (name "160")
+puck (name "161")
+puck (name "162")
+puck (name "163")
+puck (name "164")
+puck (name "165")
+puck (name "166")
+puck (name "167")
+puck (name "168")
+puck (name "169")
+
+puck (name "170")
+puck (name "171")
+puck (name "172")
+puck (name "173")
+puck (name "174")
+puck (name "175")
+puck (name "176")
+puck (name "177")
+puck (name "178")
+puck (name "179")
+
+puck (name "180")
+puck (name "181")
+puck (name "182")
+puck (name "183")
+puck (name "184")
+puck (name "185")
+puck (name "186")
+puck (name "187")
+puck (name "188")
+puck (name "189")
+
+puck (name "190")
+puck (name "191")
+puck (name "192")
+puck (name "193")
+puck (name "194")
+puck (name "195")
+puck (name "196")
+puck (name "197")
+puck (name "198")
+puck (name "199")
+
+puck (name "200")
+puck (name "201")
+puck (name "202")
+puck (name "203")
+puck (name "204")
+puck (name "205")
+puck (name "206")
+puck (name "207")
+puck (name "208")
+puck (name "209")
+
+puck (name "210")
+puck (name "211")
+puck (name "212")
+puck (name "213")
+puck (name "214")
+puck (name "215")
+puck (name "216")
+puck (name "217")
+puck (name "218")
+puck (name "219")
+
+puck (name "220")
+puck (name "221")
+puck (name "222")
+puck (name "223")
+puck (name "224")
+puck (name "225")
+puck (name "226")
+puck (name "227")
+puck (name "228")
+puck (name "229")
+
+puck (name "230")
+puck (name "231")
+puck (name "232")
+puck (name "233")
+puck (name "234")
+puck (name "235")
+puck (name "236")
+puck (name "237")
+puck (name "238")
+puck (name "239")
+
+puck (name "240")
+puck (name "241")
+puck (name "242")
+puck (name "243")
+puck (name "244")
+puck (name "245")
+puck (name "246")
+puck (name "247")
+puck (name "248")
+puck (name "249")
+
+puck (name "250")
+puck (name "251")
+puck (name "252")
+puck (name "253")
+puck (name "254")
+puck (name "255")
+puck (name "256")
+puck (name "257")
+puck (name "258")
+puck (name "259")
+
+puck (name "260")
+puck (name "261")
+puck (name "262")
+puck (name "263")
+puck (name "264")
+puck (name "265")
+puck (name "266")
+puck (name "267")
+puck (name "268")
+puck (name "269")
+
+puck (name "270")
+puck (name "271")
+puck (name "272")
+puck (name "273")
+puck (name "274")
+puck (name "275")
+puck (name "276")
+puck (name "277")
+puck (name "278")
+puck (name "279")
+
+puck (name "280")
+puck (name "281")
+puck (name "282")
+puck (name "283")
+puck (name "284")
+puck (name "285")
+puck (name "286")
+puck (name "287")
+puck (name "288")
+puck (name "289")
+
+puck (name "290")
+puck (name "291")
+puck (name "292")
+puck (name "293")
+puck (name "294")
+puck (name "295")
+puck (name "296")
+puck (name "297")
+puck (name "298")
+puck (name "299")
+
+puck (name "300")
+puck (name "301")
+puck (name "302")
+puck (name "303")
+puck (name "304")
+puck (name "305")
+puck (name "306")
+puck (name "307")
+puck (name "308")
+puck (name "309")
+
+puck (name "310")
+puck (name "311")
+puck (name "312")
+puck (name "313")
+puck (name "314")
+puck (name "315")
+puck (name "316")
+puck (name "317")
+puck (name "318")
+puck (name "319")
+
+puck (name "320")
+puck (name "321")
+puck (name "322")
+puck (name "323")
+puck (name "324")
+puck (name "325")
+puck (name "326")
+puck (name "327")
+puck (name "328")
+puck (name "329")
+
+puck (name "330")
+puck (name "331")
+puck (name "332")
+puck (name "333")
+puck (name "334")
+puck (name "335")
+puck (name "336")
+puck (name "337")
+puck (name "338")
+puck (name "339")
+
+puck (name "340")
+puck (name "341")
+puck (name "342")
+puck (name "343")
+puck (name "344")
+puck (name "345")
+puck (name "346")
+puck (name "347")
+puck (name "348")
+puck (name "349")
+
+puck (name "350")
+puck (name "351")
+puck (name "352")
+puck (name "353")
+puck (name "354")
+puck (name "355")
+puck (name "356")
+puck (name "357")
+puck (name "358")
+puck (name "359")
+
+puck (name "360")
+puck (name "361")
+puck (name "362")
+puck (name "363")
+puck (name "364")
+puck (name "365")
+puck (name "366")
+puck (name "367")
+puck (name "368")
+puck (name "369")
+
+puck (name "370")
+puck (name "371")
+puck (name "372")
+puck (name "373")
+puck (name "374")
+puck (name "375")
+puck (name "376")
+puck (name "377")
+puck (name "378")
+puck (name "379")
+
+puck (name "380")
+puck (name "381")
+puck (name "382")
+puck (name "383")
+puck (name "384")
+puck (name "385")
+puck (name "386")
+puck (name "387")
+puck (name "388")
+puck (name "389")
+
+puck (name "390")
+puck (name "391")
+puck (name "392")
+puck (name "393")
+puck (name "394")
+puck (name "395")
+puck (name "396")
+puck (name "397")
+puck (name "398")
+puck (name "399")
+
+puck (name "400")

@@ -41,6 +41,7 @@ ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
   mAvoidCount = 0;
   mReplanCounter = 0;
   mCounter = 0;
+  mRightFrontDistance = 0.0;
   mPatchVector.clear();
   mFgProgress = true;
   mProgressTimer = new CTimer( mRobot );
@@ -219,6 +220,7 @@ bool ABaseRobotCtrl::obstacleAvoid()
 //-----------------------------------------------------------------------------
 tActionResult ABaseRobotCtrl::actionFollowWaypointList()
 {
+  float diffRightFrontDist;
   float angle;
   float rightFrontDist;
   bool fgRightWallFollow = false;
@@ -242,10 +244,13 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
   if ( not obstacleAvoid() ) {
 
     rightFrontDist = mLaser->mRangeData[mLaser->getNumSamples() / 4].range;
+    diffRightFrontDist = rightFrontDist - mRightFrontDistance;
+    mRightFrontDistance = rightFrontDist;
 
     // check if we are in a corridor
     if ( inCorridor() ) {
-      angle = D2R( -5000.0 * ( rightFrontDist - 0.8 ) );
+      angle = D2R( -25.0 * ( rightFrontDist - 0.8 ) - 25.0*diffRightFrontDist );
+      printf("%f  %f -> %f \n", rightFrontDist -0.8, diffRightFrontDist, R2D(angle));
       mDrivetrain->setRotationalVelocityCmd( angle );
       mDrivetrain->setTranslationalVelocityCmd( fabs( CRUISE_SPEED * cos( angle ) ) );
       fgRightWallFollow = true;

@@ -79,7 +79,7 @@ class CPatch : public IPatch
      * @param mod Stage model of a puck
      * @param pose to be set
      */
-    void setPuckPose(Stg::Model* mod, CPose2d pose);
+    void setPuckPose(Stg::Model* mod, Stg::Pose pose);
     /**
      * Updates the patch
      */

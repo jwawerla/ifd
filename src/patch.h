@@ -73,13 +73,6 @@ class CPatch : public IPatch
     typedef struct {
       Stg::Model* mod;
     } tPuck;
-
-    /**
-     * Sets the pose of a puck
-     * @param mod Stage model of a puck
-     * @param pose to be set
-     */
-    void setPuckPose(Stg::Model* mod, Stg::Pose pose);
     /**
      * Updates the patch
      */

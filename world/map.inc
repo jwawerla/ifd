@@ -16,6 +16,7 @@ define floorplan model
   gui_outline 0
   gripper_return 0
   fiducial_return 0
+  obstacle_return 1
   laser_return 1
 )
 
