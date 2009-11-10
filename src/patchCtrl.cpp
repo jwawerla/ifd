@@ -24,17 +24,16 @@
 #include <assert.h>
 
 //-----------------------------------------------------------------------------
-extern "C" int Init( Stg::Model* mod )
+extern "C" int Init( Stg::Model* mod, Stg::CtrlArgs* args )
 {
-
-  assert(mod);
+  assert( mod );
+  assert( args );
 
   //************************************
   // init general stuff
-  ErrorInit( 10, false );
+  ErrorInit( 1, false );
 
-
-  CPatch* patch = new CPatch( mod );
+  CPatch* patch = new CPatch( mod, args);
   patch = patch; // shutup compiler
 
   return 0; // Ok

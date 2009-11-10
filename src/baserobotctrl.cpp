@@ -41,18 +41,23 @@ ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
   mAvoidCount = 0;
   mReplanCounter = 0;
   mCounter = 0;
+  mNumPucksCollected = 0;
+  mSwitchingTime = 0.0;
   mRightFrontDistance = 0.0;
+  mPatchResidenceTime = 0.0;
   mPatchVector.clear();
   mFgProgress = true;
   mProgressTimer = new CTimer( mRobot );
 
   //************************************
   // FSM
-  mFsmText[START]           = "start";
-  mFsmText[SW_PATCH]        = "switch patch";
-  mFsmText[FORAGE]          = "forage";
-  mFsmText[CHOOSE_PATCH]    = "choose";
-  mFsmText[ROTATE90]        = "rotate90";
+  mFsmText[START]               = "start";
+  mFsmText[SW_PATCH]            = "switch patch";
+  mFsmText[FORAGE]              = "forage";
+  mFsmText[CHOOSE_PATCH]        = "choose";
+  mFsmText[ROTATE90]            = "rotate90";
+  mFsmText[RETURN_TO_PATCH]     = "return to patch";
+  mFsmText[RETURN_TO_PATCH_RND] = "return to patch rnd";
 
   // init path planer
   mPathPlanner = new CPathPlannerLookup( "circle.pts", "circle.fw",
@@ -82,12 +87,15 @@ ABaseRobotCtrl::ABaseRobotCtrl( ARobot* robot ) : ARobotCtrl( robot )
   stgBlobfinder->AddColor( Stg::Color( 0, 0, 1, 1 ) );
 
   // construct a gripper
-  mGripper = ( Stg::ModelGripper* )looseRobot->getStageModel()->GetChild( "gripper:0" );
+  mGripper = ( Stg::ModelGripper* ) looseRobot->getStageModel()->GetChild( "gripper:0" );
   assert( mGripper );
   mGripper->Subscribe();
 
   // get robot pose
   mRobotPose = mDrivetrain->getOdometry()->getPose();
+
+  mDataLogger = CDataLogger::getInstance("ifd.log", OVERWRITE);
+  mDataLogger->addVar(&mNumPucksCollected, "collected");
 }
 //-----------------------------------------------------------------------------
 ABaseRobotCtrl::~ABaseRobotCtrl()
@@ -139,7 +147,7 @@ bool ABaseRobotCtrl::inPatch() const
 {
   if ( mCurrentPatch ) {
     if ( mRobotPose.distance( mCurrentPatch->getPose() ) <
-         mCurrentPatch->getRadius() - 0.2  )
+         mCurrentPatch->getRadius() - 0.2 )
       return true;
   }
   return false;
@@ -249,8 +257,8 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
 
     // check if we are in a corridor
     if ( inCorridor() ) {
-      angle = D2R( -25.0 * ( rightFrontDist - 0.8 ) - 25.0*diffRightFrontDist );
-      printf("%f  %f -> %f \n", rightFrontDist -0.8, diffRightFrontDist, R2D(angle));
+      angle = D2R( -250.0 * ( rightFrontDist - 0.8 ) - 1.0 * diffRightFrontDist );
+      //printf("%f  %f -> %f \n", rightFrontDist -0.8, diffRightFrontDist, R2D(angle));
       mDrivetrain->setRotationalVelocityCmd( angle );
       mDrivetrain->setTranslationalVelocityCmd( fabs( CRUISE_SPEED * cos( angle ) ) );
       fgRightWallFollow = true;
@@ -278,7 +286,27 @@ tActionResult ABaseRobotCtrl::actionFollowWaypointList()
   return IN_PROGRESS;
 }
 //-----------------------------------------------------------------------------
-tActionResult ABaseRobotCtrl::actionForage()
+tActionResult ABaseRobotCtrl::actionReturnToPatch()
+{
+  float angle;
+
+  if ( mFgStateChanged ) {
+    angle = atan2( mCurrentPatch->getPose().mY - mRobotPose.mY,
+                   mCurrentPatch->getPose().mX - mRobotPose.mX );
+    mHeading = randNo( angle - ( PI / 2.0 ), angle + ( PI / 2.0 ) );
+  }
+
+  if ( not obstacleAvoid() ) {
+    angle = normalizeAngle( mHeading - mRobotPose.mYaw );
+    mDrivetrain->setVelocityCmd( fabs( CRUISE_SPEED * cos( angle ) ), angle );
+  }
+  if ( inPatch() )
+    return COMPLETED;
+
+  return IN_PROGRESS;
+}
+//-----------------------------------------------------------------------------
+tActionResult ABaseRobotCtrl::actionForage(float dt)
 {
   Stg::Model* puck = NULL;
   bool fgCloseToPuck = false;
@@ -286,11 +314,14 @@ tActionResult ABaseRobotCtrl::actionForage()
   float turnRate;
   float speed;
 
+  mPatchResidenceTime += dt;
+
   if ( mBlobFinder->getNumReadings() > 0 ) {
     center = ( mBlobFinder->mBlobData[0].right +
                mBlobFinder->mBlobData[0].left ) / 2;
-    turnRate = ( center - ( mBlobFinder->getScanWidth() / 2.0 ) ) / -200.0;
-    //printf( "turnRate %f %d %d %f \n", R2D( turnRate ), mBlobFinder->getScanWidth(), center, mBlobFinder->mBlobData[0].range );
+    turnRate = ( center - ( mBlobFinder->getScanWidth() / 2.0 ) ) / -150.0;
+    //printf( "turnRate %f %d %d %f \n", R2D( turnRate ),
+    //mBlobFinder->getScanWidth(), center, mBlobFinder->mBlobData[0].range );
     if ( mBlobFinder->mBlobData[0].range < 0.85 )
       fgCloseToPuck = true;
 
@@ -305,8 +336,11 @@ tActionResult ABaseRobotCtrl::actionForage()
     if ( mGripper->GetConfig().beam[1] )
       puck = mGripper->GetConfig().beam[1];
 
-    if ( puck )
+    if ( puck ) {
+      mNumPucksCollected ++;
+      puckCollectedEvent();
       mCurrentPatch->puckConsumed( puck );
+    }
   }
   else {
     // nothing in view, go straight
@@ -346,6 +380,25 @@ tActionResult ABaseRobotCtrl::actionRotate90()
   return IN_PROGRESS;
 }
 //-----------------------------------------------------------------------------
+void ABaseRobotCtrl::puckCollectedEvent()
+{
+  // nothing to do
+}
+//-----------------------------------------------------------------------------
+tActionResult ABaseRobotCtrl::actionSelectInitialPatch()
+{
+  unsigned int r;
+  do {
+    r = ( int ) randNo( 0, mPatchVector.size() - 1 );
+  }
+  while ( r >= mPatchVector.size() );
+  mCurrentPatch = mPatchVector[r];
+  //rprintf("assigning patch %d %s\n", r, mCurrentPatch->getPose().toStr().c_str());
+  assert( mCurrentPatch );
+
+  return COMPLETED;
+}
+//-----------------------------------------------------------------------------
 tActionResult ABaseRobotCtrl::actionSelectPatch()
 {
   unsigned int r;
@@ -360,6 +413,16 @@ tActionResult ABaseRobotCtrl::actionSelectPatch()
   return COMPLETED;
 }
 //-----------------------------------------------------------------------------
+void ABaseRobotCtrl::patchEnteringEvent()
+{
+  mPatchResidenceTime = 0.0;
+}
+//-----------------------------------------------------------------------------
+bool ABaseRobotCtrl::patchLeavingDecision()
+{
+  return false; // do not leave
+}
+//-----------------------------------------------------------------------------
 void ABaseRobotCtrl::updateData( float dt )
 {
   std::list<CWaypoint2d>::iterator it;
@@ -372,6 +435,7 @@ void ABaseRobotCtrl::updateData( float dt )
 
   switch ( mState ) {
     case START:
+      actionSelectInitialPatch();
       mState = CHOOSE_PATCH;
       break;
 
@@ -382,29 +446,54 @@ void ABaseRobotCtrl::updateData( float dt )
 
     case SW_PATCH:
       if ( mFgStateChanged ) {
-        //rprintf("path %s %s \n", mRobotPose.toStr().c_str(), mCurrentPatch->getPose().toStr().c_str());
-        mPathPlanner->getPathFromTo( mRobotPose, mCurrentPatch->getPose(), mWaypointList );
+        mSwitchingTime = 0.0;
+        mPathPlanner->getPathFromTo( mRobotPose, mCurrentPatch->getPose(),
+                                     mWaypointList );
       }
-
+      mSwitchingTime += dt;
       if (( actionFollowWaypointList() == COMPLETED ) ||
           ( inPatch() ) ) {
+        // we are about to enter the patch
+        patchEnteringEvent();
         mState = FORAGE;
+        rprintf("SW TIME %f \n", mSwitchingTime);
       }
       break;
 
     case FORAGE:
-      if ( actionForage() == COMPLETED )
+      if ( actionForage( dt ) == COMPLETED )
         mState = CHOOSE_PATCH;
       if ( not inPatch() )
-        mState = SW_PATCH;
+        mState = RETURN_TO_PATCH_RND;
       if ( not isMakingProgress() )
         mState = ROTATE90;
+      if ( patchLeavingDecision() ) {
+        mState = CHOOSE_PATCH;
+      }
       break;
 
     case ROTATE90:
       if ( actionRotate90() == COMPLETED )
         mState = FORAGE;
       break;
+
+    case RETURN_TO_PATCH_RND:
+      if ( actionReturnToPatch() == COMPLETED )
+        mState = FORAGE;
+      if (mElapsedStateTime > 20.0)
+        mState = RETURN_TO_PATCH;
+      break;
+
+    case RETURN_TO_PATCH:
+      if (mFgStateChanged) {
+           mPathPlanner->getPathFromTo( mRobotPose, mCurrentPatch->getPose(),
+                                     mWaypointList );
+      }
+      if (( actionFollowWaypointList() == COMPLETED ) ||
+          ( inPatch() ) ) {
+        mState = FORAGE;
+      }
+    break;
 
     default:
       PRT_ERR1( "Unknown state %d ", mState );
@@ -427,6 +516,8 @@ void ABaseRobotCtrl::updateData( float dt )
   else {
     mFgStateChanged = false;
   }
+
+  mDataLogger->write(mRobot->getCurrentTime() );
 }
 //-----------------------------------------------------------------------------
 

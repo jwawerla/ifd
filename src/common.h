@@ -19,17 +19,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  **************************************************************************/
 
-#include <stage.hh>
-#include "patchmanager.h"
+#ifndef IFD_COMMON_H
+#define IFD_COMMON_H
 
-//-----------------------------------------------------------------------------
-extern "C" int Init( Stg::Model* mod)
-{
-  CPatchManager* manager = CPatchManager::getInstance(mod->GetWorld());
-  //mod->SetProperty("patchmanager", (void*)manager);
+#include <string>
 
-  //printf("arg %s \n", args->cmdline.c_str() );
-
-  return 0;// ok
-}
-//-----------------------------------------------------------------------------
+const std::string CMD_PUCKS = "-pucks=";
+const std::string CMD_RATE  = "-rate=";
+const std::string CMD_RADIUS  = "-radius=";
+const std::string CMD_INIT  = "-init=";
+#endif

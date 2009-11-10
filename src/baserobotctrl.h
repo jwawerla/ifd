@@ -32,7 +32,8 @@ using namespace Rapi;
 
 /** Type definition for FSM */
 typedef enum {START = 0, SW_PATCH, FORAGE, CHOOSE_PATCH,
-              ROTATE90, NUM_STATES} tState;
+              ROTATE90, RETURN_TO_PATCH_RND, RETURN_TO_PATCH,
+              NUM_STATES} tState;
 /** Type definition for action results */
 typedef enum {COMPLETED, IN_PROGRESS, FAILED } tActionResult;
 
@@ -67,6 +68,30 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
 
   protected:
     /**
+     * Should we leave the current patch or not
+     * @return true if we should leave, false otherwise
+     */
+    virtual bool patchLeavingDecision();
+    /**
+     * Action selects a patch at random
+     * @return action result
+     */
+    virtual tActionResult actionSelectPatch();
+    /**
+     * Action randomly forages for pucks in a given patch
+     * @param dt time step size [s]
+     * @return action result
+     */
+    virtual tActionResult actionForage( float dt );
+    /**
+     * This function gets called by the controller every time puck is collected
+     */
+    virtual void puckCollectedEvent();
+    /**
+     * Event called when a patch is entered
+     */
+    virtual void patchEnteringEvent();
+    /**
      * Checks if the robot is making progress moving around, or if it is stuck
      * in some behavioural loop
      * @return true if making progress, false if stuck
@@ -99,9 +124,15 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
     tState mState;
     /** Elapsed time since the current state was entered [s] */
     float mElapsedStateTime;
-
+    /** Logger */
+    CDataLogger* mDataLogger;
+    /** Number of pucks collected */
+    int mNumPucksCollected;
+    /** Patch residence time for the current patch [s] */
+    float mPatchResidenceTime;
 
   private:
+
     /** Previous state */
     tState mPrevState;
     /** Current waypoint */
@@ -146,21 +177,23 @@ class ABaseRobotCtrl : public ARobotCtrl, public IRobotCtrl
     float mHeading;
     /** Right front laser reading [m] */
     float mRightFrontDistance;
+    /** Last switching time (cost) [s] */
+    float mSwitchingTime;
+    /**
+     * Action selects the inital patch at random
+     * @return action result
+     */
+    virtual tActionResult actionSelectInitialPatch();
+    /**
+     * Action randomly returns the robot to the current patch
+     * @return action result
+     */
+     tActionResult actionReturnToPatch();
     /**
      * Action drives the robot along the waypoint list
      * @return action result
      */
     tActionResult actionFollowWaypointList();
-    /**
-     * Action selects a patch at random
-     * @return action result
-     */
-    tActionResult actionSelectPatch();
-    /**
-     * Action randomly forages for pucks in a given patch
-     * @retrun action result
-     */
-    tActionResult actionForage();
     /**
      * Action causes the robot to rotate 90 deg
      * @return action result

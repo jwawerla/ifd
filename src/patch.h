@@ -40,16 +40,11 @@ class CPatch : public IPatch
   public:
 
     /**
-     * Default constructor
-     * @param pose of patch
-     * @param name of patch
-     */
-    //CPatch( CPose2d pose, std::string name );
-    /**
      * Constructs a patch from a Stage model
      * @param mod stage model
+     * @param args command line args form Stage
      */
-    CPatch( Stg::Model* mod );
+    CPatch( Stg::Model* mod, Stg::CtrlArgs* args );
     /** Default destructor */
     virtual ~CPatch();
     /**
@@ -67,7 +62,12 @@ class CPatch : public IPatch
      * @param puck to be removed
      */
     void puckConsumed(Stg::Model* puck);
-
+    /**
+     * Gets the name of the patch
+     * @return patch name
+     */
+    std::string getName() { return mName; };
+    
   protected:
     /** Type definition for pucks */
     typedef struct {
@@ -122,8 +122,6 @@ class CPatch : public IPatch
     float mLastPuckPlacedTimestamp;
     /** Flags if the patch is initially empty or not */
     bool mFgInitEmpty;
-    /** Flags if this is the first time the update function is called */
-    bool mFgFirstRun;
 };
 
 #endif

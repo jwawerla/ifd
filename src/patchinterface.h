@@ -51,6 +51,11 @@ class IPatch
      * @param puck to be removed
      */
     virtual void puckConsumed(Stg::Model* puck) = 0;
+    /**
+     * Gets the name of the patch
+     * @return patch name
+     */
+    virtual std::string getName() = 0;
 
   protected:
     /** Default constructor */

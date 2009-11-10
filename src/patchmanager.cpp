@@ -32,6 +32,7 @@ int stgUpdate( Stg::Model* mod, CPatchManager* manager )
 CPatchManager::CPatchManager( Stg::Model* mod )
 {
   assert( mod );
+  printf("CPatchManager\n");
   //mod->AddUpdateCallback(( Stg::stg_model_callback_t ) stgUpdate, this );
 }
 //-----------------------------------------------------------------------------
@@ -48,13 +49,13 @@ CPatchManager* CPatchManager::getInstance( Stg::World* world )
     assert( world );
     patchManagerCtrlMod = world->GetModel( "patchManagerCtrl" );
 
-    if ( patchManagerCtrlMod ) {
-      instance = ( CPatchManager* )( patchManagerCtrlMod->GetProperty( "patchmanager" ) );
-    }
+   // if ( patchManagerCtrlMod ) {
+    //  instance = ( CPatchManager* )( patchManagerCtrlMod->GetProperty( "patchmanager" ) );
+   // }
     if ( instance == NULL ) {
       instance = new CPatchManager( patchManagerCtrlMod );
-      if ( patchManagerCtrlMod )
-        patchManagerCtrlMod->SetProperty( "patchmanager", ( void* )instance );
+      //if ( patchManagerCtrlMod )
+     //   patchManagerCtrlMod->SetProperty( "patchmanager", ( void* )instance );
     }
   }
   return instance;
